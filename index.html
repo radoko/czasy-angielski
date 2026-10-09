@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#4f46e5">
+<title>Czasy angielskie — kiedy którego użyć</title>
+<style>
+  :root{
+    --bg:#eef2fb; --bg2:#f8faff;
+    --card:#ffffff; --ink:#1e2440; --muted:#6b7394; --soft:#aab2d0;
+    --line:#e6ebf6; --line2:#eff2fa;
+    --acc:#4f46e5; --acc-ink:#ffffff; --acc-soft:#eef0ff;
+    --teal:#0ea5e9; --teal-soft:#e4f5fd;
+    --ok:#16a34a; --ok-soft:#e8f7ee;
+    --bad:#e11d48; --bad-soft:#fdecef;
+    --warn:#b45309; --warn-soft:#fdf3e3;
+    --present:#4f46e5; --past:#d97706; --future:#059669;
+    --shadow:0 6px 24px rgba(40,52,120,.08);
+    --shadow-lg:0 14px 40px rgba(40,52,120,.14);
+    --r:16px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;padding:0;
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+    background:linear-gradient(180deg,#e8ecf9 0%,var(--bg) 220px,var(--bg) 100%);
+    color:var(--ink);line-height:1.55;font-size:16px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:900px;margin:0 auto;padding:18px 16px calc(90px + env(safe-area-inset-bottom))}
+  header.hero{text-align:center;padding:14px 6px 6px}
+  header.hero .badge{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.4px;color:var(--acc);background:var(--acc-soft);padding:5px 14px;border-radius:999px;margin-bottom:12px}
+  header.hero h1{font-size:clamp(23px,6vw,36px);margin:0 0 6px;letter-spacing:-.4px;font-weight:800}
+  header.hero p{color:var(--muted);margin:4px auto 0;font-size:15px;max-width:40ch}
+
+  /* Tabs */
+  .tabs{position:sticky;top:0;z-index:20;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;
+    margin:16px -16px 8px;padding:10px 16px;background:linear-gradient(180deg,var(--bg) 70%,rgba(238,242,251,0));}
+  .tab{flex:1 1 auto;min-width:0;background:var(--card);border:1px solid var(--line);color:var(--muted);
+    padding:11px 8px;border-radius:12px;cursor:pointer;font-size:13.5px;font-weight:700;transition:.15s;
+    box-shadow:var(--shadow);white-space:nowrap}
+  .tab:hover{color:var(--ink)}
+  .tab.active{background:var(--acc);border-color:var(--acc);color:var(--acc-ink);box-shadow:0 8px 20px rgba(79,70,229,.3)}
+  .view{display:none}
+  .view.active{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  /* Cards */
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px;margin:14px 0;box-shadow:var(--shadow)}
+  .card h2{margin:0 0 .4em;font-size:19px;font-weight:800;letter-spacing:-.2px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .card h3{margin:1em 0 .3em;font-size:15px;font-weight:700;color:var(--acc)}
+  .tag{font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--acc-soft);color:var(--acc)}
+  .tag.t-past{background:var(--warn-soft);color:var(--past)}
+  .tag.t-future{background:var(--ok-soft);color:var(--future)}
+  .lead{color:var(--muted);margin:.2em 0 .6em}
+  .grid{display:grid;gap:12px}
+  @media(min-width:680px){.grid.two{grid-template-columns:1fr 1fr}}
+  .ex{background:var(--bg2);border:1px solid var(--line2);border-left:3px solid var(--acc);border-radius:10px;padding:10px 13px;margin:7px 0}
+  .ex .en{font-weight:600;font-size:15px}
+  .ex .en b{color:var(--acc)}
+  .ex .pl{color:var(--muted);font-size:13.5px;margin-top:2px}
+  .signals{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+  .sig{font-size:12.5px;background:var(--teal-soft);color:#0b7aad;padding:4px 10px;border-radius:8px;font-weight:600}
+  .call{border-radius:12px;padding:12px 14px;margin:10px 0;font-size:14.5px;background:var(--acc-soft);border:1px solid #e0e3ff}
+  .call.ok{background:var(--ok-soft);border-color:#cfeeda}
+  .call.bad{background:var(--bad-soft);border-color:#f8d4dc}
+  .call b{color:inherit}
+  .call.ok b{color:var(--ok)} .call.bad b{color:var(--bad)}
+  s{color:var(--bad);text-decoration-color:var(--bad)}
+  ul.clean{margin:.3em 0 .1em 1.1em;padding:0}
+  ul.clean li{margin:.3em 0}
+  .mini{font-size:12.5px;color:var(--soft)}
+  .poleng{color:var(--warn);font-weight:700}
+
+  /* Comparison table */
+  .tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px;border:1px solid var(--line);margin:10px 0}
+  table.cmp,table.cheat{width:100%;border-collapse:collapse;font-size:14px}
+  table.cmp th,table.cmp td{border-bottom:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  table.cmp th{background:var(--bg2);color:var(--acc);font-weight:700;font-size:13px}
+  table.cmp .pl{color:var(--muted);font-size:12.5px}
+  table.cheat{min-width:680px}
+  table.cheat th,table.cheat td{border-bottom:1px solid var(--line);border-right:1px solid var(--line2);padding:10px 12px;text-align:left;vertical-align:top}
+  table.cheat th{position:sticky;top:0;background:var(--bg2);color:var(--acc);z-index:2;font-size:12.5px;font-weight:700}
+  table.cheat td:first-child{white-space:nowrap}
+  table.cheat tr.grp td{background:#f1f4fc;color:var(--ink);font-weight:800;letter-spacing:.4px;font-size:11.5px;text-transform:uppercase}
+  table.cheat tbody tr:not(.grp):hover td{background:#fafbff}
+  table.cheat .pl{color:var(--muted);font-size:12px}
+  table.cheat b{color:var(--acc)}
+  .s{display:inline-block;font-size:11px;background:var(--teal-soft);color:#0b7aad;padding:2px 7px;border-radius:7px;margin:2px 3px 0 0;font-weight:600}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:middle}
+  .d-pres{background:var(--present)} .d-past{background:var(--past)} .d-fut{background:var(--future)}
+  ul.tree{list-style:none;margin:.3em 0;padding:0}
+  ul.tree li{padding:9px 12px;margin:7px 0;background:var(--bg2);border:1px solid var(--line2);border-left:3px solid var(--acc);border-radius:9px;font-size:14px}
+
+  /* Buttons */
+  .btn{background:var(--card);border:1px solid var(--line);color:var(--ink);padding:12px 20px;border-radius:12px;cursor:pointer;font-weight:700;font-size:15px;transition:.12s;box-shadow:var(--shadow)}
+  .btn:hover{border-color:var(--acc);color:var(--acc)}
+  .btn.primary{background:var(--acc);border-color:var(--acc);color:var(--acc-ink);box-shadow:0 8px 20px rgba(79,70,229,.3)}
+  .btn.primary:hover{color:#fff;filter:brightness(1.05)}
+  .btn:disabled{opacity:.45;cursor:default;box-shadow:none}
+  .center{text-align:center}
+
+  /* Quiz */
+  .quizbar{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .progress{flex:1;height:10px;background:#dfe4f3;border-radius:999px;overflow:hidden}
+  .progress > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--teal));transition:.35s;border-radius:999px}
+  .score{font-weight:800;font-size:14px;white-space:nowrap}
+  .score .ok{color:var(--ok)} .score .bad{color:var(--bad)}
+  .qcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px;box-shadow:var(--shadow-lg)}
+  .qmeta{display:flex;justify-content:space-between;align-items:center;color:var(--soft);font-size:12.5px;margin-bottom:10px;font-weight:600}
+  .qmeta .chip{background:var(--acc-soft);color:var(--acc);padding:3px 10px;border-radius:999px}
+  .qpl{font-size:20px;font-weight:800;margin:4px 0 4px;letter-spacing:-.2px}
+  .qen{font-size:16px;color:var(--muted);margin:0 0 16px}
+  .qen .gap{color:var(--warn);font-weight:800;background:var(--warn-soft);padding:1px 10px;border-radius:6px}
+  .opts{display:grid;gap:10px}
+  .opt{text-align:left;background:var(--card);border:1.5px solid var(--line);color:var(--ink);
+    padding:14px 16px;border-radius:12px;cursor:pointer;font-size:15px;font-weight:700;transition:.12s;min-height:52px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .opt:hover:not(:disabled){border-color:var(--acc);background:var(--acc-soft)}
+  .opt:disabled{cursor:default}
+  .opt.correct{border-color:var(--ok);background:var(--ok-soft);color:#0a7a37}
+  .opt.wrong{border-color:var(--bad);background:var(--bad-soft);color:#b4123a}
+  .opt .mark{font-weight:900;font-size:17px}
+  .explain{margin-top:14px;border-radius:12px;padding:14px 15px;display:none;font-size:14.5px;border:1px solid}
+  .explain.show{display:block;animation:fade .2s ease}
+  .explain.good{background:var(--ok-soft);border-color:#cfeeda}
+  .explain.poor{background:var(--bad-soft);border-color:#f8d4dc}
+  .explain .head{font-weight:800;margin-bottom:6px}
+  .explain.good .head{color:var(--ok)}
+  .explain.poor .head{color:var(--bad)}
+  .explain .tip{margin-top:9px;font-size:13px;color:var(--muted);border-top:1px dashed rgba(0,0,0,.08);padding-top:8px}
+  .nav{display:flex;justify-content:space-between;gap:10px;margin-top:16px}
+  .nav .btn{flex:0 0 auto}
+  .nav .btn.primary{flex:1}
+  .result{text-align:center;padding:28px 20px}
+  .result .ring{width:132px;height:132px;margin:6px auto 14px;border-radius:50%;display:grid;place-items:center;
+    background:conic-gradient(var(--acc) var(--p,0%),#e2e7f5 0);position:relative}
+  .result .ring::before{content:"";position:absolute;inset:12px;background:var(--card);border-radius:50%}
+  .result .ring .val{position:relative;font-size:30px;font-weight:900}
+  .result .val small{font-size:15px;color:var(--muted);font-weight:700}
+  .result .lbl{color:var(--muted)}
+  .result .msg{font-size:16px;font-weight:700;margin:6px 0 2px}
+  .filters{display:flex;gap:7px;flex-wrap:wrap;margin:4px 0 14px}
+  .fchip{font-size:13px;background:var(--card);border:1px solid var(--line);color:var(--muted);padding:7px 13px;border-radius:999px;cursor:pointer;font-weight:600;transition:.12s}
+  .fchip:hover{border-color:var(--acc);color:var(--acc)}
+  .fchip.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+  footer{text-align:center;color:var(--soft);font-size:12.5px;margin-top:26px}
+  a{color:var(--acc)}
+
+  /* ===== Oś czasu (timeline) ===== */
+  .tl-stage{position:relative;height:190px;margin:18px 0 6px;border-radius:14px;overflow:hidden;
+    background:linear-gradient(90deg,#fdf3e3 0%,#fdf3e3 38%,#eef0ff 38%,#eef0ff 62%,#e8f7ee 62%,#e8f7ee 100%);
+    border:1px solid var(--line)}
+  .tl-zone{position:absolute;top:8px;font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;opacity:.65}
+  .tl-zone.past{left:12px;color:var(--past)}
+  .tl-zone.now{left:50%;transform:translateX(-50%);color:var(--acc)}
+  .tl-zone.fut{right:12px;color:var(--future)}
+  .tl-axis{position:absolute;left:3%;right:3%;top:50%;height:3px;background:#c7cfe6;border-radius:2px;transform:translateY(-50%)}
+  .tl-axis::after{content:"";position:absolute;right:-2px;top:50%;transform:translateY(-50%);
+    border-left:9px solid #c7cfe6;border-top:6px solid transparent;border-bottom:6px solid transparent}
+  .tl-now{position:absolute;left:50%;top:14%;bottom:14%;width:0;border-left:2px dashed var(--acc);transform:translateX(-50%)}
+  .tl-now b{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-size:10.5px;color:var(--acc);font-weight:800;white-space:nowrap}
+
+  .tl-dot{position:absolute;top:50%;width:20px;height:20px;border-radius:50%;transform:translate(-50%,-50%) scale(0);
+    box-shadow:0 2px 8px rgba(0,0,0,.18);animation:tlpop .45s cubic-bezier(.2,1.3,.5,1) both;z-index:3}
+  .tl-dot.past{background:var(--past)} .tl-dot.present{background:var(--acc)} .tl-dot.future{background:var(--future)}
+  .tl-dot.early{background:#ea580c;outline:3px solid #fed7aa}
+  .tl-dot.small{width:13px;height:13px}
+  .tl-lbl{position:absolute;top:calc(50% + 16px);transform:translateX(-50%);font-size:10.5px;font-weight:700;
+    color:var(--ink);white-space:nowrap;background:rgba(255,255,255,.75);padding:1px 6px;border-radius:6px;
+    opacity:0;animation:tlfade .4s ease both;z-index:4}
+  .tl-lbl.up{top:calc(50% - 30px)}
+
+  .tl-bar{position:absolute;top:50%;height:22px;border-radius:7px;transform:translateY(-50%) scaleX(0);
+    transform-origin:left center;animation:tlgrow .55s ease both;z-index:2}
+  .tl-bar.past{background:linear-gradient(180deg,#f59e0b,#d97706)}
+  .tl-bar.present{background:linear-gradient(180deg,#6366f1,#4f46e5)}
+  .tl-bar.future{background:linear-gradient(180deg,#10b981,#059669)}
+  .tl-bar.pulse{animation:tlgrow .5s ease both, tlpulse 1.3s ease-in-out .5s infinite}
+  .tl-bar.stripes{background-image:repeating-linear-gradient(115deg,rgba(255,255,255,.35) 0 7px,transparent 7px 16px);
+    background-size:28px 100%;animation:tlgrow .5s ease both, tlstripes .7s linear .5s infinite}
+  .tl-bar.stripes.past{background-color:#d97706} .tl-bar.stripes.present{background-color:#4f46e5}
+
+  .tl-flash{position:absolute;top:50%;font-size:22px;transform:translate(-50%,-150%) scale(0);
+    animation:tlflash .5s cubic-bezier(.2,1.4,.4,1) both;z-index:5;filter:drop-shadow(0 2px 3px rgba(0,0,0,.2))}
+  .tl-travel{position:absolute;top:50%;width:14px;height:14px;border-radius:50%;background:var(--acc);
+    transform:translate(-50%,-50%);box-shadow:0 0 0 4px rgba(79,70,229,.25);animation:tltravel 1.1s ease both;z-index:4}
+  .tl-link{position:absolute;top:50%;height:3px;background:repeating-linear-gradient(90deg,var(--acc) 0 6px,transparent 6px 11px);
+    transform:translateY(-50%);transform-origin:left center;animation:tlgrow .6s ease both;opacity:.7;z-index:1}
+
+  @keyframes tlpop{0%{transform:translate(-50%,-50%) scale(0)}65%{transform:translate(-50%,-50%) scale(1.3)}100%{transform:translate(-50%,-50%) scale(1)}}
+  @keyframes tlgrow{from{transform:translateY(-50%) scaleX(0)}to{transform:translateY(-50%) scaleX(1)}}
+  @keyframes tlfade{from{opacity:0;transform:translateX(-50%) translateY(4px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+  @keyframes tlpulse{0%,100%{filter:brightness(1);box-shadow:0 0 0 0 rgba(79,70,229,.3)}50%{filter:brightness(1.12);box-shadow:0 0 0 7px rgba(79,70,229,0)}}
+  @keyframes tlstripes{from{background-position:0 0}to{background-position:28px 0}}
+  @keyframes tlflash{0%{transform:translate(-50%,-150%) scale(0);opacity:0}60%{transform:translate(-50%,-50%) scale(1.35);opacity:1}100%{transform:translate(-50%,-50%) scale(1)}}
+  @keyframes tltravel{from{left:var(--from)}to{left:var(--to)}}
+
+  .tl-chips{display:flex;gap:7px;flex-wrap:wrap;margin:4px 0 2px}
+  .tl-cap{background:var(--bg2);border:1px solid var(--line2);border-radius:12px;padding:13px 15px;margin-top:14px}
+  .tl-cap .en{font-weight:700;font-size:15.5px}
+  .tl-cap .en b{color:var(--acc)}
+  .tl-cap .pl{color:var(--muted);font-size:13.5px;margin-top:2px}
+  .tl-cap .note{font-size:13px;margin-top:8px;color:var(--ink);border-top:1px dashed rgba(0,0,0,.08);padding-top:8px}
+  @media(prefers-reduced-motion:reduce){
+    .tl-dot,.tl-bar,.tl-flash,.tl-travel,.tl-link,.tl-lbl{animation-duration:.01ms!important;animation-iteration-count:1!important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="badge">⏳ ANGIELSKIE CZASY</div>
+    <h1>Kiedy <span style="color:var(--acc)">którego</span> czasu użyć</h1>
+    <p>Materiał do nauki: zasady, ściąga i test — wszystko w jednym miejscu.</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" data-view="learn">📖 Nauka</button>
+    <button class="tab" data-view="cheat">📋 Ściąga</button>
+    <button class="tab" data-view="timeline">⏱ Oś czasu</button>
+    <button class="tab" data-view="quiz" id="tabQuiz">📝 Test</button>
+  </div>
+
+  <!-- ============ NAUKA ============ -->
+  <section id="learn" class="view active">
+
+    <div class="card">
+      <h2>🧭 Jak wybrać właściwy czas</h2>
+      <p class="lead">Wybór czasu zależy od <b>sytuacji</b>, a nie od pojedynczego słowa. Zanim zdecydujesz, zadaj sobie trzy pytania:</p>
+      <div class="call ok">
+        <ul class="clean">
+          <li>1️⃣ <b>Kiedy</b> to się dzieje? (przeszłość / teraźniejszość / przyszłość)</li>
+          <li>2️⃣ Czy to jest <b>zakończone</b>, czy <b>trwa / jest w toku</b>?</li>
+          <li>3️⃣ Czy ma <b>związek z teraz</b> (skutek, doświadczenie), czy to tylko <b>fakt z przeszłości</b>?</li>
+        </ul>
+      </div>
+      <p class="mini">💡 Słowa takie jak „już", „właśnie", „od", „przez" to <b>sygnały</b>, które podpowiadają czas. Poniżej masz je rozpisane przy każdym czasie.</p>
+    </div>
+
+    <div class="card">
+      <h2>Present Simple <span class="tag">teraźniejszy prosty</span></h2>
+      <p class="lead">Rutyna, fakty, prawdy ogólne, harmonogramy. <b>„Zawsze tak jest / tak robię".</b> Nie dla „teraz w tej chwili".</p>
+      <div class="signals"><span class="sig">always</span><span class="sig">usually</span><span class="sig">often</span><span class="sig">never</span><span class="sig">every day</span><span class="sig">on Mondays</span></div>
+      <div class="ex"><div class="en">I <b>drink</b> coffee in the morning.</div><div class="pl">Piję kawę rano. (codziennie, taki zwyczaj)</div></div>
+      <div class="call bad"><b>Częsty błąd:</b> „Teraz piję kawę" to NIE Present Simple. „Teraz" = <b>Present Continuous</b> (I <span class="poleng">am drinking</span>).</div>
+    </div>
+
+    <div class="card">
+      <h2>Present Continuous <span class="tag">teraźniejszy ciągły</span></h2>
+      <p class="lead">Dzieje się <b>teraz / w tym okresie</b>, sytuacja tymczasowa. Też: <b>umówione plany</b> na przyszłość.</p>
+      <div class="signals"><span class="sig">now</span><span class="sig">right now</span><span class="sig">at the moment</span><span class="sig">today</span><span class="sig">these days</span><span class="sig">Look!</span></div>
+      <div class="grid two">
+        <div class="ex"><div class="en">She <b>is working</b> from home this week.</div><div class="pl">Pracuje z domu w tym tygodniu. (tymczasowo)</div></div>
+        <div class="ex"><div class="en">We <b>are meeting</b> Tom tomorrow.</div><div class="pl">Spotykamy się z Tomem jutro. (plan umówiony)</div></div>
+      </div>
+      <div class="call bad"><b>Uwaga:</b> czasowniki stanu (know, like, want, need, understand) <b>nie</b> idą w Continuous. ❌ <s>I am knowing</s> → ✅ I know.</div>
+    </div>
+
+    <div class="card">
+      <h2>⚔️ Present Simple vs Present Continuous</h2>
+      <div class="tablewrap"><table class="cmp">
+        <tr><th>Present Simple</th><th>Present Continuous</th></tr>
+        <tr><td>Zawsze / zwykle / w ogóle</td><td>Teraz / w tym okresie</td></tr>
+        <tr><td>I <b>work</b> in a bank. <span class="pl">(mój zawód)</span></td><td>I <b>am working</b> late today. <span class="pl">(dziś wyjątkowo)</span></td></tr>
+        <tr><td>He <b>smokes</b>. <span class="pl">(pali — nałóg)</span></td><td>He <b>is smoking</b>. <span class="pl">(pali w tej chwili)</span></td></tr>
+      </table></div>
+    </div>
+
+    <div class="card">
+      <h2>🔥 Past Simple vs Present Perfect <span class="tag">najważniejsze</span></h2>
+      <p class="lead">Różnica jest w <b>związku z teraźniejszością</b> i w tym, czy <b>mówimy KIEDY</b> coś się stało.</p>
+      <div class="tablewrap"><table class="cmp">
+        <tr><th>Past Simple</th><th>Present Perfect</th></tr>
+        <tr><td>Konkretny <b>moment w przeszłości</b>, odcięty od teraz</td><td><b>Łącznik z teraz</b>: skutek, doświadczenie, świeża wiadomość</td></tr>
+        <tr><td>Jest <b>KIEDY</b>: yesterday, in 2010, ago, last week</td><td><b>Brak</b> konkretnego kiedy: ever, never, just, already, yet, so far</td></tr>
+        <tr><td>I <b>lost</b> my keys yesterday.<br><span class="pl">Zgubiłem klucze wczoraj.</span></td><td>I <b>have lost</b> my keys. <span class="pl">(i teraz ich nie mam!)</span></td></tr>
+      </table></div>
+      <div class="call ok"><b>Złoty test:</b> możesz dopowiedzieć „<b>kiedy</b>" (wczoraj, w 2010) → <b>Past Simple</b>. Ważne „<b>i co z tego teraz</b>" / „czy kiedykolwiek" → <b>Present Perfect</b>.</div>
+      <div class="signals"><span class="sig">just</span><span class="sig">already</span><span class="sig">yet</span><span class="sig">ever</span><span class="sig">never</span><span class="sig">so far</span><span class="sig">since</span><span class="sig">for</span></div>
+    </div>
+
+    <div class="card">
+      <h2>since / for — „od" i „przez" <span class="tag">Present Perfect</span></h2>
+      <p class="lead">Coś zaczęło się w przeszłości i <b>trwa do teraz</b>. To zwykle Present Perfect, nie Present Simple.</p>
+      <div class="grid two">
+        <div class="ex"><div class="en">I <b>have lived</b> here <b>for</b> 5 years.</div><div class="pl">Mieszkam tu od 5 lat. (for + okres)</div></div>
+        <div class="ex"><div class="en">I <b>have known</b> her <b>since</b> 2015.</div><div class="pl">Znam ją od 2015. (since + punkt startu)</div></div>
+      </div>
+      <div class="call bad"><b>Częsty błąd:</b> ❌ <s>I live here since 2015</s> → ✅ I <b>have lived</b> here since 2015. (trwa OD przeszłości DO teraz)</div>
+    </div>
+
+    <div class="card">
+      <h2>Present Perfect Continuous <span class="tag">perfect ciągły</span></h2>
+      <p class="lead">Czynność <b>trwała do teraz</b> i podkreślamy <b>jak długo / proces / efekt trwania</b>.</p>
+      <div class="grid two">
+        <div class="ex"><div class="en">I<b>'ve been waiting</b> for an hour!</div><div class="pl">Czekam już godzinę! (i wciąż)</div></div>
+        <div class="ex"><div class="en">Have you <b>been crying</b>?</div><div class="pl">Płakałeś? (widać świeży skutek)</div></div>
+      </div>
+      <div class="call"><b>Perfect vs Perfect Continuous:</b> „<b>have done</b>" = ile / rezultat (I've read 3 books). „<b>have been doing</b>" = jak długo / proces (I've been reading all day).</div>
+    </div>
+
+    <div class="card">
+      <h2>Past Continuous <span class="tag t-past">przeszły ciągły</span></h2>
+      <p class="lead">Tło w przeszłości — coś <b>trwało</b>, gdy <b>przerwało</b> je inne wydarzenie (Past Simple).</p>
+      <div class="ex"><div class="en">I <b>was cooking</b> when the phone <b>rang</b>.</div><div class="pl">Gotowałem, kiedy zadzwonił telefon.</div></div>
+      <div class="signals"><span class="sig">while</span><span class="sig">when</span><span class="sig">as</span><span class="sig">at 7 pm yesterday</span></div>
+      <div class="call ok"><b>Reguła:</b> dłuższe tło → <b>was/were + -ing</b>; krótkie, nagłe przerwanie → <b>Past Simple</b>.</div>
+    </div>
+
+    <div class="card">
+      <h2>Past Perfect <span class="tag t-past">zaprzeszły</span></h2>
+      <p class="lead">„Przeszłość w przeszłości" — coś stało się <b>WCZEŚNIEJ</b> niż inne wydarzenie w przeszłości.</p>
+      <div class="ex"><div class="en">The train <b>had left</b> when we <b>arrived</b>.</div><div class="pl">Pociąg (już) odjechał, zanim dotarliśmy.</div></div>
+      <div class="signals"><span class="sig">before</span><span class="sig">after</span><span class="sig">by the time</span><span class="sig">already</span></div>
+      <div class="call"><b>Kolejność:</b> wcześniejsze zdarzenie → Past Perfect (had done), późniejsze → Past Simple.</div>
+    </div>
+
+    <div class="card">
+      <h2>🔮 Przyszłość: will / going to / Present Continuous</h2>
+      <p class="lead">Wybór zależy od tego, <b>skąd wiemy</b> o tej przyszłości.</p>
+      <div class="tablewrap"><table class="cmp">
+        <tr><th>Forma</th><th>Kiedy</th><th>Przykład</th></tr>
+        <tr><td><b>will</b></td><td>Decyzja <b>w tej chwili</b>, obietnica, przewidywanie-opinia</td><td>I <b>'ll help</b> you.</td></tr>
+        <tr><td><b>going to</b></td><td><b>Plan / zamiar</b>; przewidywanie z <b>dowodów</b></td><td>It<b>'s going to</b> rain. <span class="pl">(widać chmury)</span></td></tr>
+        <tr><td><b>Present Continuous</b></td><td>Ustalone, <b>umówione</b> spotkanie z datą</td><td>I<b>'m seeing</b> the doctor at 5.</td></tr>
+      </table></div>
+      <div class="call ok"><b>Skrót:</b> spontanicznie → <b>will</b>; zaplanowane → <b>going to</b>; umówione z kalendarzem → <b>Present Continuous</b>.</div>
+    </div>
+
+    <div class="card">
+      <h2>Future Continuous &amp; Future Perfect <span class="tag t-future">dalsza przyszłość</span></h2>
+      <div class="grid two">
+        <div>
+          <h3>Future Continuous — will be doing</h3>
+          <p class="mini">Będzie <b>trwać</b> w konkretnym momencie przyszłości.</p>
+          <div class="ex"><div class="en">This time tomorrow I<b>'ll be flying</b> to Rome.</div><div class="pl">Jutro o tej porze będę leciał do Rzymu.</div></div>
+        </div>
+        <div>
+          <h3>Future Perfect — will have done</h3>
+          <p class="mini">Będzie <b>zakończone PRZED</b> danym momentem.</p>
+          <div class="ex"><div class="en">By 2030 I<b>'ll have finished</b> my studies.</div><div class="pl">Do 2030 skończę studia.</div></div>
+        </div>
+      </div>
+      <div class="signals"><span class="sig">by then</span><span class="sig">by 2030</span><span class="sig">this time tomorrow</span><span class="sig">in an hour</span></div>
+    </div>
+
+    <div class="card center">
+      <button class="btn primary" data-goquiz>Sprawdź się w teście →</button>
+    </div>
+  </section>
+
+  <!-- ============ ŚCIĄGA ============ -->
+  <section id="cheat" class="view">
+    <div class="card">
+      <h2>📋 Ściąga — wszystkie czasy</h2>
+      <p class="lead">Najważniejsza jest kolumna <b>„KIEDY użyć"</b>. Grupy kolorami: <span class="dot d-pres"></span>teraźniejsze, <span class="dot d-past"></span>przeszłe, <span class="dot d-fut"></span>przyszłe.</p>
+      <div class="tablewrap">
+      <table class="cheat">
+        <thead><tr><th>Czas</th><th>KIEDY użyć</th><th>Sygnały</th><th>Budowa</th><th>Przykład</th></tr></thead>
+        <tbody>
+          <tr class="grp"><td colspan="5"><span class="dot d-pres"></span> Teraźniejszość</td></tr>
+          <tr><td><b>Present Simple</b><br><span class="pl">prosty</span></td><td>Rutyna, fakty, harmonogramy. „Zawsze tak jest."</td><td><span class="s">always</span><span class="s">every day</span><span class="s">never</span></td><td>I/you <b>work</b>, he <b>works</b></td><td>I <b>drink</b> coffee every morning.<br><span class="pl">Piję kawę co rano.</span></td></tr>
+          <tr><td><b>Present Continuous</b><br><span class="pl">ciągły</span></td><td>Dzieje się TERAZ / tymczasowo; umówione plany.</td><td><span class="s">now</span><span class="s">at the moment</span><span class="s">Look!</span></td><td>am/is/are + <b>-ing</b></td><td>I<b>'m drinking</b> coffee now.<br><span class="pl">Piję kawę teraz.</span></td></tr>
+          <tr><td><b>Present Perfect</b><br><span class="pl">teraź. dokonany</span></td><td>Przeszłość ze ZWIĄZKIEM z teraz: skutek, doświadczenie, „od…". Bez daty.</td><td><span class="s">just</span><span class="s">already</span><span class="s">yet</span><span class="s">ever</span><span class="s">since/for</span></td><td>have/has + <b>III</b></td><td>I<b>'ve lost</b> my keys.<br><span class="pl">Zgubiłem klucze (i nie mam).</span></td></tr>
+          <tr><td><b>Present Perfect Continuous</b><br><span class="pl">dok. ciągły</span></td><td>Czynność TRWAŁA do teraz; nacisk na „jak długo" / proces.</td><td><span class="s">for</span><span class="s">since</span><span class="s">how long</span><span class="s">all day</span></td><td>have/has been + <b>-ing</b></td><td>I<b>'ve been waiting</b> for an hour.<br><span class="pl">Czekam już godzinę.</span></td></tr>
+          <tr class="grp"><td colspan="5"><span class="dot d-past"></span> Przeszłość</td></tr>
+          <tr><td><b>Past Simple</b><br><span class="pl">przeszły prosty</span></td><td>Zakończony moment w przeszłości, znamy KIEDY.</td><td><span class="s">yesterday</span><span class="s">ago</span><span class="s">last…</span><span class="s">in 2010</span></td><td>II forma (-ed)</td><td>I <b>lost</b> my keys yesterday.<br><span class="pl">Zgubiłem klucze wczoraj.</span></td></tr>
+          <tr><td><b>Past Continuous</b><br><span class="pl">przeszły ciągły</span></td><td>Tło — coś TRWAŁO, gdy przerwało je inne zdarzenie.</td><td><span class="s">while</span><span class="s">when</span><span class="s">at 7pm yesterday</span></td><td>was/were + <b>-ing</b></td><td>I <b>was cooking</b> when he called.<br><span class="pl">Gotowałem, gdy zadzwonił.</span></td></tr>
+          <tr><td><b>Past Perfect</b><br><span class="pl">zaprzeszły</span></td><td>Stało się WCZEŚNIEJ niż inne przeszłe zdarzenie.</td><td><span class="s">before</span><span class="s">after</span><span class="s">by the time</span></td><td>had + <b>III</b></td><td>The train <b>had left</b> before we came.<br><span class="pl">Pociąg odjechał, zanim przyszliśmy.</span></td></tr>
+          <tr><td><b>Past Perfect Continuous</b><br><span class="pl">zaprzeszły ciągły</span></td><td>Proces TRWAŁ do momentu w przeszłości (przyczyna/skutek).</td><td><span class="s">for</span><span class="s">since</span><span class="s">before + skutek</span></td><td>had been + <b>-ing</b></td><td>He was tired; he <b>had been working</b> all day.<br><span class="pl">Był zmęczony — pracował cały dzień.</span></td></tr>
+          <tr class="grp"><td colspan="5"><span class="dot d-fut"></span> Przyszłość</td></tr>
+          <tr><td><b>Future (will)</b><br><span class="pl">przyszły prosty</span></td><td>Decyzja W TEJ CHWILI, obietnica, przewidywanie-opinia.</td><td><span class="s">I think</span><span class="s">probably</span><span class="s">I promise</span></td><td>will + bezokolicznik</td><td>I<b>'ll help</b> you.<br><span class="pl">Pomogę ci (decyduję teraz).</span></td></tr>
+          <tr><td><b>Future (going to)</b><br><span class="pl">zamiar/plan</span></td><td>PLAN ustalony wcześniej; przewidywanie z DOWODÓW.</td><td><span class="s">plan</span><span class="s">zamiar</span><span class="s">Look!</span></td><td>am/is/are going to + bezok.</td><td>It<b>'s going to</b> rain.<br><span class="pl">Będzie padać (widać chmury).</span></td></tr>
+          <tr><td><b>Present Continuous</b><br><span class="pl">(o przyszłości)</span></td><td>Umówione spotkanie z datą/godziną.</td><td><span class="s">tomorrow at 5</span><span class="s">umówione</span></td><td>am/is/are + <b>-ing</b></td><td>I<b>'m seeing</b> the dentist at 5.<br><span class="pl">Jestem umówiony na 17.</span></td></tr>
+          <tr><td><b>Future Continuous</b><br><span class="pl">przyszły ciągły</span></td><td>Będzie TRWAĆ w konkretnym momencie przyszłości.</td><td><span class="s">this time tomorrow</span><span class="s">at 8pm</span></td><td>will be + <b>-ing</b></td><td>This time tomorrow I<b>'ll be flying</b>.<br><span class="pl">Jutro o tej porze będę leciał.</span></td></tr>
+          <tr><td><b>Future Perfect</b><br><span class="pl">przyszły dokonany</span></td><td>Będzie ZAKOŃCZONE PRZED danym momentem.</td><td><span class="s">by 2030</span><span class="s">by then</span><span class="s">by the time</span></td><td>will have + <b>III</b></td><td>By Friday I<b>'ll have finished</b>.<br><span class="pl">Do piątku skończę.</span></td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="mini">📱 Przewiń tabelę w bok, aby zobaczyć wszystkie kolumny.</p>
+    </div>
+
+    <div class="card">
+      <h2>🌳 Szybkie drzewko decyzyjne</h2>
+      <div class="grid two">
+        <div>
+          <h3>Teraźniejszość / przeszłość</h3>
+          <ul class="tree">
+            <li>Dzieje się <b>teraz / chwilowo</b>? → <b>Present Continuous</b></li>
+            <li>Rutyna / fakt ogólny? → <b>Present Simple</b></li>
+            <li>Przeszłe + znam <b>kiedy</b>? → <b>Past Simple</b></li>
+            <li>Przeszłe, ale ważny <b>skutek teraz</b> / „od…"? → <b>Present Perfect</b></li>
+            <li>Nacisk na <b>jak długo trwa</b>? → <b>Present Perfect Continuous</b></li>
+            <li><b>Tło</b> przerwane zdarzeniem? → <b>Past Continuous</b></li>
+            <li>Zdarzenie <b>wcześniejsze</b> od innego? → <b>Past Perfect</b></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Przyszłość</h3>
+          <ul class="tree">
+            <li>Decyduję <b>teraz</b> / obietnica? → <b>will</b></li>
+            <li><b>Plan</b> z góry lub dowód („Look!")? → <b>going to</b></li>
+            <li><b>Umówione</b> spotkanie z godziną? → <b>Present Continuous</b></li>
+            <li>Będzie <b>trwać</b> o danej porze? → <b>Future Continuous</b></li>
+            <li>Będzie <b>gotowe przed</b> (by 2030)? → <b>Future Perfect</b></li>
+            <li>Po <b>when / if / after</b>? → <b>Present Simple</b> (nie will!)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="call bad"><b>3 częste błędy:</b>
+        <ul class="clean">
+          <li>❌ <s>I live here since 2015</s> → ✅ I <b>have lived</b> here since 2015.</li>
+          <li>❌ <s>I am knowing / wanting</s> → ✅ I <b>know / want</b>.</li>
+          <li>❌ <s>When I will arrive</s> → ✅ When I <b>arrive</b>.</li>
+        </ul>
+      </div>
+      <div class="center" style="margin-top:12px"><button class="btn primary" data-goquiz>Przejdź do testu →</button></div>
+    </div>
+  </section>
+
+  <!-- ============ OŚ CZASU ============ -->
+  <section id="timeline" class="view">
+    <div class="card">
+      <h2>⏱ Osie czasu</h2>
+      <p class="lead">Wybierz czas, a animacja pokaże, <b>gdzie na osi</b> leży czynność względem <b style="color:var(--acc)">TERAZ</b>. Kropka = jeden moment, pasek = trwanie, ⚡ = przerwanie, linia do „teraz" = związek z teraźniejszością.</p>
+      <div class="tl-chips" id="tlChips"></div>
+      <div class="tl-stage" id="tlStage">
+        <span class="tl-zone past">Przeszłość</span>
+        <span class="tl-zone now">Teraz</span>
+        <span class="tl-zone fut">Przyszłość</span>
+        <div class="tl-axis"></div>
+        <div class="tl-now"><b>TERAZ</b></div>
+        <div id="tlMarkers"></div>
+      </div>
+      <div class="tl-cap" id="tlCap"></div>
+      <div class="center" style="margin-top:12px">
+        <button class="btn" id="tlReplay">↻ Odtwórz animację</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TEST ============ -->
+  <section id="quiz" class="view">
+    <div class="card" id="quizIntro">
+      <h2 id="quizTitle">📝 Test</h2>
+      <p class="lead">Przeczytaj polskie zdanie, wybierz właściwy czas. Po każdej odpowiedzi dostaniesz wyjaśnienie — a gdy wybierzesz źle, dowiesz się <b>dlaczego</b> poprawny jest inny.</p>
+      <div class="filters" id="filters"></div>
+      <div class="center" style="margin-top:6px"><button class="btn primary" id="startBtn">Start testu ▶</button></div>
+      <p class="mini center" style="margin-top:10px">Możesz zawęzić do jednego czasu, aby ćwiczyć punktowo, albo zostawić „Wszystkie".</p>
+    </div>
+
+    <div id="quizRun" style="display:none">
+      <div class="quizbar">
+        <div class="progress"><i id="bar"></i></div>
+        <div class="score">✅<span class="ok" id="scOk">0</span> &nbsp;❌<span class="bad" id="scBad">0</span></div>
+      </div>
+      <div class="qcard">
+        <div class="qmeta"><span id="qnum"></span><span class="chip" id="qcat"></span></div>
+        <div class="qpl" id="qpl"></div>
+        <div class="qen" id="qen"></div>
+        <div class="opts" id="opts"></div>
+        <div class="explain" id="explain">
+          <div class="head" id="exHead"></div>
+          <div class="why" id="exWhy"></div>
+          <div class="tip" id="exTip"></div>
+        </div>
+        <div class="nav">
+          <button class="btn" id="restartBtn">↺</button>
+          <button class="btn primary" id="nextBtn" disabled>Dalej →</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="quizResult" style="display:none">
+      <div class="qcard result">
+        <div class="lbl">Twój wynik</div>
+        <div class="ring" id="ring"><div class="val"><span id="finalScore">0</span><small>/<span id="finalTotal">0</span></small></div></div>
+        <div class="msg" id="finalMsg"></div>
+        <div style="margin-top:18px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <button class="btn primary" id="againBtn">Jeszcze raz</button>
+          <button class="btn" id="reviewBtn">📖 Wróć do nauki</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>Materiał do nauki czasów • otwórz w przeglądarce • powodzenia! 🍀</footer>
+</div>
+
+<script>
+const T = {
+  PS:"Present Simple", PC:"Present Continuous", PPf:"Present Perfect", PPC:"Present Perfect Continuous",
+  PaS:"Past Simple", PaC:"Past Continuous", PaPf:"Past Perfect", PaPC:"Past Perfect Continuous",
+  WILL:"Future (will)", GO:"Future (going to)", FC:"Future Continuous", FPf:"Future Perfect"
+};
+const Q = [
+ // ---- Present Simple vs Continuous ----
+ {pl:"Codziennie wstaję o siódmej.", en:"I ___ up at seven every day.", opts:[T.PS,T.PC,T.PaS], a:0, cat:T.PS, why:"„Codziennie” (every day) = rutyna, czynność powtarzalna → Present Simple.", tip:"every day / always / usually → Present Simple."},
+ {pl:"Patrz! On biegnie do autobusu.", en:"Look! He ___ to catch the bus.", opts:[T.PS,T.PC,T.WILL], a:1, cat:T.PC, why:"„Patrz!” i dzieje się to w tej chwili → Present Continuous (am/is/are + -ing).", tip:"Look! / now / at the moment → Present Continuous."},
+ {pl:"Woda wrze w temperaturze 100 stopni.", en:"Water ___ at 100 degrees.", opts:[T.PS,T.PC,T.PPf], a:0, cat:T.PS, why:"Prawda ogólna / fakt naukowy → zawsze Present Simple.", tip:"Fakty i prawdy ogólne zawsze Present Simple."},
+ {pl:"W tym tygodniu pracuję z domu.", en:"I ___ from home this week.", opts:[T.PS,T.PC,T.PPf], a:1, cat:T.PC, why:"Sytuacja tymczasowa, „w tym tygodniu” (not forever) → Present Continuous.", tip:"these days / this week (tymczasowo) → Present Continuous."},
+ {pl:"Ona rozumie ten problem.", en:"She ___ the problem.", opts:[T.PC,T.PS,T.PPf], a:1, cat:T.PS, why:"„Understand” to czasownik stanu — nie używamy go w Continuous. → Present Simple.", tip:"know, like, want, understand = stany → nigdy -ing."},
+ {pl:"Zwykle piję herbatę, ale teraz piję kawę.", en:"I usually drink tea, but now I ___ coffee.", opts:[T.PS,T.PC,T.PaS], a:1, cat:T.PC, why:"„Teraz” (now) łamie rutynę — czynność w tej chwili → Present Continuous.", tip:"Kontrast „zwykle… ale teraz” → drugi czasownik w Continuous."},
+ {pl:"Pociąg odjeżdża o 9:00 (według rozkładu).", en:"The train ___ at 9:00.", opts:[T.PS,T.PC,T.WILL], a:0, cat:T.PS, why:"Rozkłady jazdy / harmonogramy → Present Simple, mimo że to przyszłość.", tip:"Rozkłady (train, film, lekcja) → Present Simple."},
+ {pl:"Dlaczego ciągle się spóźniasz?!", en:"Why ___ you always ___ late?!", opts:[T.PS,T.PC,T.PPf], a:1, cat:T.PC, why:"„always + Continuous” wyraża irytację powtarzalnym zachowaniem → are you always being/coming late.", tip:"always + Continuous = narzekanie na nawyk."},
+ {pl:"On pali (jest palaczem).", en:"He ___.", opts:[T.PS,T.PC,T.PPf], a:0, cat:T.PS, why:"Ogólny nawyk / cecha, nie „w tej chwili” → Present Simple.", tip:"Nałóg/cecha stała → Present Simple."},
+ {pl:"Ciii! Dziecko śpi.", en:"Be quiet! The baby ___.", opts:[T.PS,T.PC,T.PaC], a:1, cat:T.PC, why:"Dzieje się teraz, w tej chwili → Present Continuous.", tip:"Stan chwilowy obserwowany teraz → Present Continuous."},
+
+ // ---- Past Simple vs Present Perfect ----
+ {pl:"Wczoraj zgubiłem telefon.", en:"I ___ my phone yesterday.", opts:[T.PaS,T.PPf,T.PaPf], a:0, cat:T.PaS, why:"Jest „yesterday” — konkretny moment w przeszłości → Past Simple.", tip:"yesterday / ago / last → zawsze Past Simple."},
+ {pl:"Zgubiłem telefon (i nie mam go teraz).", en:"I ___ my phone (I can't find it).", opts:[T.PaS,T.PPf,T.PaC], a:1, cat:T.PPf, why:"Liczy się skutek teraz (nie mam telefonu), brak „kiedy” → Present Perfect.", tip:"Skutek w teraźniejszości + brak daty → Present Perfect."},
+ {pl:"Czy kiedykolwiek byłeś w Japonii?", en:"___ you ever ___ to Japan?", opts:[T.PaS,T.PPf,T.PaPf], a:1, cat:T.PPf, why:"„Kiedykolwiek w życiu” (ever), doświadczenie bez daty → Present Perfect: Have you ever been.", tip:"ever / never (doświadczenie życiowe) → Present Perfect."},
+ {pl:"Byłem w Japonii w 2019 roku.", en:"I ___ to Japan in 2019.", opts:[T.PaS,T.PPf,T.PaPf], a:0, cat:T.PaS, why:"Konkretny rok (in 2019) → Past Simple.", tip:"Podana data → Past Simple, nie Perfect."},
+ {pl:"Właśnie skończyłem pracę.", en:"I ___ just ___ work.", opts:[T.PaS,T.PPf,T.PPC], a:1, cat:T.PPf, why:"„Just” (właśnie) = świeżo zakończone z efektem teraz → Present Perfect: have just finished.", tip:"just / already / yet → Present Perfect."},
+ {pl:"Czy już zjadłeś?", en:"___ you ___ yet?", opts:[T.PaS,T.PPf,T.PaPf], a:1, cat:T.PPf, why:"„Yet” (jeszcze/już) w pytaniu → Present Perfect: Have you eaten yet?", tip:"yet w pytaniu/przeczeniu → Present Perfect."},
+ {pl:"On wyszedł pięć minut temu.", en:"He ___ five minutes ago.", opts:[T.PaS,T.PPf,T.PaC], a:0, cat:T.PaS, why:"„Ago” (temu) zawsze wskazuje konkretny moment → Past Simple.", tip:"ago = zawsze Past Simple (nigdy Perfect)."},
+ {pl:"Przeczytałem już trzy książki tego autora.", en:"I ___ three books by this author so far.", opts:[T.PaS,T.PPf,T.PPC], a:1, cat:T.PPf, why:"„So far” (jak dotąd) + wynik liczbowy do teraz → Present Perfect.", tip:"so far / up to now + ile → Present Perfect."},
+ {pl:"Spotkałem go wczoraj na przystanku.", en:"I ___ him at the bus stop yesterday.", opts:[T.PaS,T.PPf,T.PaPf], a:0, cat:T.PaS, why:"„Yesterday” + konkretne miejsce i moment → Past Simple.", tip:"Konkretna opowieść z przeszłości → Past Simple."},
+ {pl:"Nigdy nie próbowałem sushi.", en:"I ___ never ___ sushi.", opts:[T.PaS,T.PPf,T.PaPf], a:1, cat:T.PPf, why:"„Never” (w życiu, do teraz) → Present Perfect: have never tried.", tip:"never (dotąd w życiu) → Present Perfect."},
+ {pl:"Film już się zaczął, spóźniliśmy się.", en:"The film ___ already ___.", opts:[T.PaS,T.PPf,T.PaPf], a:1, cat:T.PPf, why:"„Already” (już) + skutek teraz (jesteśmy spóźnieni) → Present Perfect: has already started.", tip:"already → Present Perfect."},
+ {pl:"Kiedy ona przyjechała?", en:"When ___ she ___?", opts:[T.PaS,T.PPf,T.PaC], a:0, cat:T.PaS, why:"Pytanie „kiedy?” wymaga konkretnego momentu → Past Simple (When did she arrive?).", tip:"Pytanie WHEN → zawsze Past Simple, nie Present Perfect."},
+ {pl:"Ceny bardzo wzrosły (ostatnio, i tak jest teraz).", en:"Prices ___ a lot recently.", opts:[T.PaS,T.PPf,T.PaC], a:1, cat:T.PPf, why:"„Recently” + skutek trwa teraz → Present Perfect: have risen.", tip:"recently / lately → najczęściej Present Perfect."},
+
+ // ---- for / since ----
+ {pl:"Mieszkam tu od pięciu lat.", en:"I ___ here for five years.", opts:[T.PS,T.PPf,T.PaS], a:1, cat:T.PPf, why:"Zaczęło się w przeszłości i trwa do teraz (for 5 years) → Present Perfect, mimo polskiego „mieszkam”.", tip:"Po polsku teraźniejszy, po ang. have lived — bo trwa OD przeszłości."},
+ {pl:"Znam ją od 2015 roku.", en:"I ___ her since 2015.", opts:[T.PS,T.PPf,T.PaS], a:1, cat:T.PPf, why:"„Since 2015” = od punktu w przeszłości do teraz → Present Perfect: have known.", tip:"since + punkt / for + okres → Present Perfect."},
+ {pl:"Nie widziałem go od wtorku.", en:"I ___ him since Tuesday.", opts:[T.PaS,T.PPf,T.PaPf], a:1, cat:T.PPf, why:"„Since Tuesday” — brak kontaktu trwa do teraz → Present Perfect: haven't seen.", tip:"haven't … since → Present Perfect."},
+ {pl:"Pracujemy nad tym projektem od poniedziałku.", en:"We ___ on this project since Monday.", opts:[T.PPf,T.PPC,T.PaC], a:1, cat:T.PPC, why:"Proces trwający do teraz + nacisk na „jak długo” → Present Perfect Continuous: have been working.", tip:"for/since + nacisk na trwanie → Present Perfect Continuous."},
+
+ // ---- Present Perfect Continuous ----
+ {pl:"Czekam już godzinę!", en:"I ___ for an hour!", opts:[T.PPf,T.PPC,T.PaC], a:1, cat:T.PPC, why:"Nacisk na trwanie do teraz (i wciąż) → Present Perfect Continuous: have been waiting.", tip:"„już X czasu i wciąż” → have been -ing."},
+ {pl:"Masz czerwone oczy. Płakałaś?", en:"Your eyes are red. ___ you ___?", opts:[T.PaS,T.PPC,T.PPf], a:1, cat:T.PPC, why:"Świeży, widoczny skutek niedawnej, trwającej czynności → Present Perfect Continuous: Have you been crying?", tip:"Widoczny efekt świeżego procesu → Perfect Continuous."},
+ {pl:"Jestem zmęczony, bo cały dzień biegałem.", en:"I'm tired because I ___ all day.", opts:[T.PaS,T.PPC,T.PPf], a:1, cat:T.PPC, why:"Skutek teraz (zmęczenie) + proces „cały dzień” → have been running.", tip:"all day / all morning + skutek → Perfect Continuous."},
+ {pl:"Przeczytałem trzy książki w tym tygodniu.", en:"I ___ three books this week.", opts:[T.PPf,T.PPC,T.PaS], a:0, cat:T.PPf, why:"Nacisk na WYNIK (ile — trzy), czynność zakończona → Present Perfect zwykły: have read.", tip:"ile / rezultat gotowy → have done (nie -ing)."},
+
+ // ---- Past Continuous / Past Simple ----
+ {pl:"Gotowałem, kiedy zadzwonił telefon.", en:"I ___ when the phone rang.", opts:[T.PaS,T.PaC,T.PaPf], a:1, cat:T.PaC, why:"Dłuższe tło przerwane krótkim zdarzeniem (rang) → Past Continuous: was cooking.", tip:"Tło (was -ing) + nagłe zdarzenie (Past Simple)."},
+ {pl:"Kiedy wszedłem, ona czytała książkę.", en:"When I came in, she ___ a book.", opts:[T.PaS,T.PaC,T.PPf], a:1, cat:T.PaC, why:"Czynność już trwała w tle (czytanie) gdy nastąpiło wejście → Past Continuous: was reading.", tip:"Co już trwało w momencie zdarzenia → Past Continuous."},
+ {pl:"Wczoraj o 20:00 oglądaliśmy film.", en:"At 8 pm yesterday we ___ a film.", opts:[T.PaS,T.PaC,T.PPf], a:1, cat:T.PaC, why:"Konkretny moment w przeszłości, w którym czynność TRWAŁA → Past Continuous.", tip:"at 8 pm yesterday (w trakcie) → Past Continuous."},
+ {pl:"Padało, więc zostaliśmy w domu.", en:"It ___, so we stayed home.", opts:[T.PaS,T.PaC,T.PPf], a:1, cat:T.PaC, why:"Tło / okoliczność trwająca (padało) → Past Continuous: was raining.", tip:"Pogoda jako tło → Past Continuous."},
+ {pl:"Wszedł, usiadł i otworzył laptop.", en:"He ___ in, sat down and opened the laptop.", opts:[T.PaS,T.PaC,T.PPf], a:0, cat:T.PaS, why:"Ciąg kolejnych, zakończonych czynności → wszystkie Past Simple: came.", tip:"Sekwencja zdarzeń po kolei → Past Simple."},
+ {pl:"Podczas gdy ja gotowałem, on sprzątał.", en:"While I ___, he was cleaning.", opts:[T.PaS,T.PaC,T.PPf], a:1, cat:T.PaC, why:"Dwie równoległe czynności trwające jednocześnie → oba Past Continuous: was cooking.", tip:"while + dwie trwające równolegle → Past Continuous."},
+
+ // ---- Past Perfect ----
+ {pl:"Pociąg odjechał, zanim dotarliśmy na stację.", en:"The train ___ before we got to the station.", opts:[T.PaS,T.PaPf,T.PPf], a:1, cat:T.PaPf, why:"Odjazd był WCZEŚNIEJ niż przyjazd — wcześniejsze z dwóch przeszłych → Past Perfect: had left.", tip:"Wcześniejsze z dwóch przeszłych zdarzeń → had + III."},
+ {pl:"Kiedy przyszedłem, ona już wyszła.", en:"When I arrived, she ___ already ___.", opts:[T.PaS,T.PaPf,T.PPf], a:1, cat:T.PaPf, why:"„Już wyszła” przed moim przyjściem → Past Perfect: had already left.", tip:"„już” w przeszłości względem innego zdarzenia → Past Perfect."},
+ {pl:"Nie mogłem wejść, bo zgubiłem klucze (wcześniej).", en:"I couldn't get in because I ___ my keys.", opts:[T.PaS,T.PaPf,T.PPf], a:1, cat:T.PaPf, why:"Zgubienie było PRZED próbą wejścia → Past Perfect: had lost.", tip:"Przyczyna wcześniejsza niż skutek przeszły → Past Perfect."},
+ {pl:"Zjadłem śniadanie, a potem wyszedłem.", en:"After I ___ breakfast, I left.", opts:[T.PaS,T.PaPf,T.PaC], a:1, cat:T.PaPf, why:"„After” + podkreślenie, że jedno skończyło się przed drugim → Past Perfect: had eaten.", tip:"after/before dla wyraźnej kolejności → Past Perfect."},
+ {pl:"Zanim skończył 20 lat, zwiedził 10 krajów.", en:"By the time he was 20, he ___ 10 countries.", opts:[T.PaS,T.PaPf,T.PPf], a:1, cat:T.PaPf, why:"„By the time” + bilans przed momentem w przeszłości → Past Perfect: had visited.", tip:"by the time (w przeszłości) → Past Perfect."},
+
+ // ---- Future ----
+ {pl:"Dobra, pomogę ci (decyduję w tej chwili).", en:"OK, I ___ you.", opts:[T.WILL,T.GO,T.PC], a:0, cat:T.WILL, why:"Decyzja podjęta w momencie mówienia → will: I'll help.", tip:"Spontaniczna decyzja → will."},
+ {pl:"Postanowiłem — będę studiował medycynę.", en:"I ___ study medicine.", opts:[T.WILL,T.GO,T.PC], a:1, cat:T.GO, why:"Zamiar/plan ustalony wcześniej → be going to: I'm going to study.", tip:"Wcześniejszy plan/zamiar → going to."},
+ {pl:"Spójrz na te chmury! Będzie padać.", en:"Look at those clouds! It ___ rain.", opts:[T.WILL,T.GO,T.FC], a:1, cat:T.GO, why:"Przewidywanie na podstawie widocznych dowodów → be going to: it's going to rain.", tip:"Dowód tu i teraz („Look!”) → going to."},
+ {pl:"Jutro o 17:00 jestem umówiony z dentystą.", en:"I ___ the dentist at 5 tomorrow.", opts:[T.WILL,T.GO,T.PC], a:2, cat:T.PC, why:"Ustalone, umówione spotkanie z godziną → Present Continuous: I'm seeing.", tip:"Umówione spotkanie z czasem → Present Continuous."},
+ {pl:"Myślę, że wygrają ten mecz.", en:"I think they ___ the match.", opts:[T.WILL,T.GO,T.FC], a:0, cat:T.WILL, why:"Przewidywanie-opinia (I think, probably) → will: will win.", tip:"I think / probably / maybe + przyszłość → will."},
+ {pl:"Jutro o tej porze będę leciał do Rzymu.", en:"This time tomorrow I ___ to Rome.", opts:[T.WILL,T.FC,T.FPf], a:1, cat:T.FC, why:"Czynność będzie TRWAĆ w konkretnym momencie przyszłości → Future Continuous: will be flying.", tip:"„o tej porze” + trwanie w przyszłości → Future Continuous."},
+ {pl:"Do 2030 roku skończę studia.", en:"By 2030 I ___ my studies.", opts:[T.WILL,T.FC,T.FPf], a:2, cat:T.FPf, why:"Zakończone PRZED daną datą → Future Perfect: will have finished.", tip:"by 2030 / by then (gotowe przed) → Future Perfect."},
+ {pl:"Zadzwonię do ciebie, kiedy dojadę.", en:"I'll call you when I ___.", opts:[T.WILL,T.PS,T.GO], a:1, cat:T.PS, why:"Po „when/if/after” o przyszłości NIE dajemy will — używamy Present Simple: when I arrive.", tip:"Po when/if/after → Present Simple, nie will."},
+ {pl:"Jeśli będzie padać, zostaniemy w domu.", en:"If it ___, we'll stay home.", opts:[T.WILL,T.PS,T.GO], a:1, cat:T.PS, why:"Pierwszy tryb warunkowy: po „if” → Present Simple, w drugiej części will.", tip:"1st conditional: if + Present Simple, … will."},
+ {pl:"Ten prezent jest ciężki — poniosę go.", en:"That's heavy — I ___ it for you.", opts:[T.WILL,T.GO,T.PC], a:0, cat:T.WILL, why:"Oferta/propozycja pomocy w chwili mówienia → will: I'll carry.", tip:"Propozycja/oferta → will."},
+
+ // ---- Mieszane powtórki ----
+ {pl:"Ona pracuje jako lekarka.", en:"She ___ as a doctor.", opts:[T.PS,T.PC,T.PPf], a:0, cat:T.PS, why:"Stały zawód / fakt o życiu → Present Simple.", tip:"Zawód / stała sytuacja → Present Simple."},
+ {pl:"Ucz się! Dlaczego grasz w gry?", en:"Study! Why ___ you ___ games?", opts:[T.PS,T.PC,T.PaC], a:1, cat:T.PC, why:"Czynność dzieje się teraz, w tej chwili → Present Continuous: are you playing.", tip:"Czynność obserwowana teraz → Present Continuous."},
+ {pl:"Nie słyszałem o tym wcześniej.", en:"I ___ of it before.", opts:[T.PaS,T.PPf,T.PaPf], a:1, cat:T.PPf, why:"Doświadczenie do teraz, bez konkretnej daty → Present Perfect: haven't heard.", tip:"before (w sensie „kiedykolwiek dotąd”) → Present Perfect."},
+ {pl:"Studiowałem w Krakowie przez trzy lata (to się skończyło).", en:"I ___ in Kraków for three years (then I moved).", opts:[T.PaS,T.PPf,T.PaC], a:0, cat:T.PaS, why:"Okres zakończony w przeszłości (już tam nie studiuję) → Past Simple: studied.", tip:"for + okres, ale ZAKOŃCZONY w przeszłości → Past Simple."},
+ {pl:"Mieszkam w tym mieście od dziecka (wciąż).", en:"I ___ in this city since childhood.", opts:[T.PaS,T.PPf,T.PaC], a:1, cat:T.PPf, why:"Trwa do teraz (since childhood, wciąż mieszkam) → Present Perfect: have lived.", tip:"since + wciąż trwa → Present Perfect."},
+ {pl:"Kiedy się urodziłeś?", en:"When ___ you ___?", opts:[T.PaS,T.PPf,T.PaC], a:0, cat:T.PaS, why:"Konkretny punkt w przeszłości + pytanie „kiedy” → Past Simple: When were you born?", tip:"born + when → Past Simple."},
+ {pl:"On uczy się angielskiego od dwóch lat.", en:"He ___ English for two years.", opts:[T.PS,T.PPC,T.PaC], a:1, cat:T.PPC, why:"Proces trwający do teraz + „jak długo” → Present Perfect Continuous: has been learning.", tip:"nauka/praca „od X” i wciąż → Perfect Continuous."},
+ {pl:"Właśnie posprzątałam cały dom.", en:"I ___ just ___ the whole house.", opts:[T.PaS,T.PPf,T.PPC], a:1, cat:T.PPf, why:"„Just” + gotowy efekt (czysty dom) → Present Perfect: have just cleaned.", tip:"just + rezultat gotowy → Present Perfect."},
+ {pl:"Sprzątałam cały ranek (dlatego jestem zmęczona).", en:"I ___ all morning.", opts:[T.PaS,T.PPf,T.PPC], a:2, cat:T.PPC, why:"Nacisk na trwanie procesu „cały ranek” + skutek → Present Perfect Continuous: have been cleaning.", tip:"all morning + proces/zmęczenie → Perfect Continuous."},
+ {pl:"Spał, gdy wybuchł pożar.", en:"He ___ when the fire broke out.", opts:[T.PaS,T.PaC,T.PaPf], a:1, cat:T.PaC, why:"Tło trwające (spał), przerwane nagłym zdarzeniem → Past Continuous: was sleeping.", tip:"Co trwało w momencie zdarzenia → Past Continuous."},
+ {pl:"Zanim zadzwoniłaś, już wyszedłem z domu.", en:"Before you called, I ___ the house.", opts:[T.PaS,T.PaPf,T.PaC], a:1, cat:T.PaPf, why:"Wyjście było wcześniej niż telefon → Past Perfect: had left.", tip:"before + wcześniejsze zdarzenie → Past Perfect."},
+ {pl:"Jutro idę na koncert (mam bilety).", en:"I ___ to a concert tomorrow.", opts:[T.WILL,T.GO,T.PC], a:2, cat:T.PC, why:"Ustalony, umówiony plan z biletami → Present Continuous: I'm going.", tip:"Konkretny ustalony plan → Present Continuous."},
+ {pl:"Chyba wezmę parasol.", en:"I think I ___ an umbrella.", opts:[T.WILL,T.GO,T.PC], a:0, cat:T.WILL, why:"Decyzja podjęta teraz + „I think” → will: I'll take.", tip:"I think + decyzja w locie → will."},
+ {pl:"On nie zdąży — pociąg już odjeżdża.", en:"He won't make it — the train ___.", opts:[T.PS,T.PC,T.WILL], a:1, cat:T.PC, why:"Dzieje się teraz, na naszych oczach → Present Continuous: is leaving.", tip:"Dzieje się w tej chwili → Present Continuous."},
+ {pl:"Za dwie godziny będę już w domu (zakończona podróż).", en:"In two hours I ___ home.", opts:[T.FC,T.FPf,T.WILL], a:1, cat:T.FPf, why:"Będę w domu = podróż zakończona przed tym momentem → Future Perfect: will have arrived / got home.", tip:"„za X czasu już” (gotowe) → Future Perfect."},
+ {pl:"Nienawidzę, kiedy ludzie się spóźniają.", en:"I ___ it when people are late.", opts:[T.PS,T.PC,T.PPf], a:0, cat:T.PS, why:"„Hate” to czasownik stanu + ogólna prawda o mnie → Present Simple.", tip:"Uczucia/opinie ogólne → Present Simple."},
+ {pl:"Teraz myślę o zmianie pracy.", en:"I ___ about changing jobs.", opts:[T.PS,T.PC,T.PPf], a:1, cat:T.PC, why:"„Think” w znaczeniu „rozważam teraz” wyjątkowo MOŻE być w Continuous → am thinking.", tip:"think = rozważać (proces) może być Continuous."},
+ {pl:"Znam odpowiedź.", en:"I ___ the answer.", opts:[T.PS,T.PC,T.PPf], a:0, cat:T.PS, why:"„Know” to stan — nigdy w Continuous → Present Simple: I know.", tip:"know zawsze Present Simple."},
+ {pl:"Słońce wschodzi na wschodzie.", en:"The sun ___ in the east.", opts:[T.PS,T.PC,T.WILL], a:0, cat:T.PS, why:"Prawda ogólna → Present Simple.", tip:"Zjawiska stałe → Present Simple."},
+ {pl:"Uczę się angielskiego (ogólnie, od jakiegoś czasu w życiu).", en:"I ___ English.", opts:[T.PS,T.PC,T.PaS], a:0, cat:T.PS, why:"Ogólny fakt o sobie, bez nacisku na „teraz w tej chwili” → Present Simple: I learn/study English.", tip:"Ogólne zajęcie → Present Simple (bez „now”)."},
+ {pl:"W tej chwili uczę się do egzaminu.", en:"Right now I ___ for an exam.", opts:[T.PS,T.PC,T.PaC], a:1, cat:T.PC, why:"„Right now” → Present Continuous: am studying.", tip:"right now → Present Continuous."},
+ {pl:"Czy skończyłeś już raport?", en:"___ you ___ the report yet?", opts:[T.PaS,T.PPf,T.PaPf], a:1, cat:T.PPf, why:"„Yet” w pytaniu, liczy się stan teraz → Present Perfect: Have you finished?", tip:"yet → Present Perfect."},
+ {pl:"Skończyłem raport o 18:00.", en:"I ___ the report at 6 pm.", opts:[T.PaS,T.PPf,T.PaC], a:0, cat:T.PaS, why:"Podana godzina → konkretny moment → Past Simple: finished.", tip:"Podana godzina → Past Simple."},
+ {pl:"Od rana nic nie jadłem.", en:"I ___ anything since morning.", opts:[T.PaS,T.PPf,T.PaPf], a:1, cat:T.PPf, why:"„Since morning” + skutek teraz (głodny) → Present Perfect: haven't eaten.", tip:"haven't … since → Present Perfect."},
+ {pl:"On już trzy razy dzwonił dzisiaj.", en:"He ___ three times today.", opts:[T.PaS,T.PPf,T.PaC], a:1, cat:T.PPf, why:"„Today” jeszcze trwa + liczba do teraz → Present Perfect: has called.", tip:"today (niezakończony) + ile razy → Present Perfect."},
+ {pl:"On dzwonił trzy razy wczoraj.", en:"He ___ three times yesterday.", opts:[T.PaS,T.PPf,T.PaC], a:0, cat:T.PaS, why:"„Yesterday” = dzień zamknięty → Past Simple: called.", tip:"yesterday (zamknięty) → Past Simple."},
+ {pl:"Jak długo czekasz?", en:"How long ___ you ___?", opts:[T.PS,T.PPC,T.PaC], a:1, cat:T.PPC, why:"„How long” + czynność trwa do teraz → Present Perfect Continuous: have you been waiting.", tip:"How long + wciąż trwa → Perfect Continuous."},
+ {pl:"Ile razy oglądałeś ten film?", en:"How many times ___ you ___ this film?", opts:[T.PaS,T.PPf,T.PaC], a:1, cat:T.PPf, why:"„Ile razy” (doświadczenie/liczba do teraz) → Present Perfect: have you seen.", tip:"How many times (w życiu) → Present Perfect."},
+ {pl:"Gdy przyszedłem, oni jedli obiad.", en:"When I arrived, they ___ lunch.", opts:[T.PaS,T.PaC,T.PaPf], a:1, cat:T.PaC, why:"Jedzenie już trwało w tle → Past Continuous: were having.", tip:"Czynność w toku w momencie zdarzenia → Past Continuous."},
+ {pl:"Gdy przyszedłem, oni zjedli już obiad.", en:"When I arrived, they ___ lunch already.", opts:[T.PaS,T.PaC,T.PaPf], a:2, cat:T.PaPf, why:"Obiad był zjedzony PRZED moim przyjściem → Past Perfect: had had/eaten.", tip:"„już zjedli” przed zdarzeniem → Past Perfect."},
+ {pl:"Będę się z tobą widział w przyszłym tygodniu.", en:"I ___ you next week.", opts:[T.WILL,T.PC,T.FPf], a:1, cat:T.PC, why:"Zaplanowane, umówione spotkanie → Present Continuous: I'm seeing (też poprawne: I'll see).", tip:"Ustalone spotkanie → Present Continuous."},
+ {pl:"Obiecuję, że ci pomogę.", en:"I promise I ___ you.", opts:[T.WILL,T.GO,T.PC], a:0, cat:T.WILL, why:"Obietnica → will: I'll help.", tip:"Obietnica → will."},
+ {pl:"Zbliża się do nas — wygląda, że będzie kłopot.", en:"He's coming over — there ___ be trouble.", opts:[T.WILL,T.GO,T.PC], a:1, cat:T.GO, why:"Przewidywanie z dowodów (widzimy sytuację) → going to: is going to be.", tip:"Widoczny dowód → going to."},
+ {pl:"Wątpię, czy przyjdzie.", en:"I doubt he ___.", opts:[T.WILL,T.GO,T.PC], a:0, cat:T.WILL, why:"Opinia/przewidywanie (I doubt) → will: will come.", tip:"I doubt / I expect / probably → will."},
+ {pl:"Woda się gotuje — zrobię herbatę.", en:"The water is boiling — I ___ some tea.", opts:[T.WILL,T.GO,T.PC], a:0, cat:T.WILL, why:"Decyzja w chwili mówienia (reakcja na sytuację) → will: I'll make.", tip:"Reakcja/decyzja na poczekaniu → will."},
+ {pl:"Powiem mu, jak go zobaczę.", en:"I'll tell him when I ___ him.", opts:[T.WILL,T.PS,T.PC], a:1, cat:T.PS, why:"Po „when” o przyszłości → Present Simple: when I see.", tip:"when + przyszłość → Present Simple."},
+ {pl:"On nosi dziś garnitur (nietypowo).", en:"He ___ a suit today.", opts:[T.PS,T.PC,T.PPf], a:1, cat:T.PC, why:"Sytuacja chwilowa, dziś wyjątkowo → Present Continuous: is wearing.", tip:"„dziś wyjątkowo” → Present Continuous."},
+ {pl:"On nosi okulary (na co dzień).", en:"He ___ glasses.", opts:[T.PS,T.PC,T.PPf], a:0, cat:T.PS, why:"Stała cecha / nawyk → Present Simple: wears.", tip:"Cecha stała → Present Simple."},
+ {pl:"Czy widziałeś ostatnio jakiś dobry film?", en:"___ you ___ any good film lately?", opts:[T.PaS,T.PPf,T.PaC], a:1, cat:T.PPf, why:"„Lately” + doświadczenie do teraz → Present Perfect: Have you seen.", tip:"lately → Present Perfect."},
+ {pl:"Wczoraj widziałem świetny film.", en:"I ___ a great film yesterday.", opts:[T.PaS,T.PPf,T.PaC], a:0, cat:T.PaS, why:"„Yesterday” → Past Simple: saw.", tip:"yesterday → Past Simple."},
+ {pl:"Zgubili się, bo nie wzięli mapy (wcześniej).", en:"They got lost because they ___ a map.", opts:[T.PaS,T.PaPf,T.PaC], a:1, cat:T.PaPf, why:"Niewzięcie mapy było PRZED zgubieniem → Past Perfect: hadn't taken.", tip:"Przyczyna wcześniejsza → Past Perfect."},
+ {pl:"Padało od trzech godzin, więc ulice były zalane.", en:"It ___ for three hours, so the streets were flooded.", opts:[T.PaS,T.PaPC,T.PaPf], a:1, cat:T.PaPC, why:"Proces trwający DO pewnego momentu w przeszłości → Past Perfect Continuous: had been raining.", tip:"for X + skutek w przeszłości → Past Perfect Continuous."},
+ {pl:"Był zmęczony, bo pracował cały dzień (przed tym momentem).", en:"He was tired because he ___ all day.", opts:[T.PaS,T.PaPC,T.PaPf], a:1, cat:T.PaPC, why:"Trwający proces przed momentem w przeszłości + skutek → Past Perfect Continuous: had been working.", tip:"all day + skutek w przeszłości → Past Perfect Continuous."},
+ {pl:"O północy będę jeszcze spał.", en:"At midnight I ___.", opts:[T.WILL,T.FC,T.FPf], a:1, cat:T.FC, why:"Czynność będzie TRWAĆ o danej godzinie → Future Continuous: will be sleeping.", tip:"o danej godzinie + trwanie → Future Continuous."},
+ {pl:"Do piątku skończę projekt.", en:"I ___ the project by Friday.", opts:[T.WILL,T.FC,T.FPf], a:2, cat:T.FPf, why:"Zakończone PRZED piątkiem → Future Perfect: will have finished.", tip:"by Friday (gotowe przed) → Future Perfect."},
+ {pl:"Kiedy on przyjdzie, będziemy jeść kolację.", en:"When he comes, we ___ dinner.", opts:[T.WILL,T.FC,T.FPf], a:1, cat:T.FC, why:"Czynność będzie w toku w danym momencie przyszłości → Future Continuous: will be having.", tip:"„będziemy w trakcie” → Future Continuous."},
+ {pl:"Nie martw się, poradzę sobie.", en:"Don't worry, I ___ fine.", opts:[T.WILL,T.GO,T.PC], a:0, cat:T.WILL, why:"Zapewnienie/przewidywanie → will: I'll be fine.", tip:"Zapewnienie → will."},
+ {pl:"Zamierzam rzucić palenie.", en:"I ___ quit smoking.", opts:[T.WILL,T.GO,T.PC], a:1, cat:T.GO, why:"Postanowienie/zamiar → be going to: I'm going to quit.", tip:"Zamiar/postanowienie → going to."},
+ {pl:"Lekcja zaczyna się o 8:00 (plan szkoły).", en:"The lesson ___ at 8:00.", opts:[T.PS,T.PC,T.WILL], a:0, cat:T.PS, why:"Harmonogram → Present Simple: starts.", tip:"Plan/harmonogram → Present Simple."},
+ {pl:"On właśnie wchodzi do pokoju.", en:"He ___ the room right now.", opts:[T.PS,T.PC,T.WILL], a:1, cat:T.PC, why:"„Right now” → Present Continuous: is entering.", tip:"right now → Present Continuous."},
+ {pl:"Czy kiedykolwiek jadłeś ślimaki?", en:"___ you ever ___ snails?", opts:[T.PaS,T.PPf,T.PaPf], a:1, cat:T.PPf, why:"„Ever” (doświadczenie życiowe) → Present Perfect: Have you ever eaten.", tip:"ever → Present Perfect."},
+ {pl:"Zjadłem ślimaki, kiedy byłem we Francji.", en:"I ___ snails when I was in France.", opts:[T.PaS,T.PPf,T.PaC], a:0, cat:T.PaS, why:"Konkretna sytuacja w przeszłości (when I was in France) → Past Simple: ate.", tip:"„when I was…” konkretny moment → Past Simple."},
+ {pl:"Mieszkała w Londynie, zanim przeprowadziła się tutaj.", en:"She ___ in London before she moved here.", opts:[T.PaS,T.PaPf,T.PaC], a:1, cat:T.PaPf, why:"Mieszkanie w Londynie było wcześniejsze → Past Perfect: had lived.", tip:"before + wcześniejsze → Past Perfect."},
+ {pl:"Nie widziałem go od lat.", en:"I ___ him for years.", opts:[T.PaS,T.PPf,T.PaPf], a:1, cat:T.PPf, why:"„For years” + trwa do teraz (nadal nie widzę) → Present Perfect: haven't seen.", tip:"haven't … for years → Present Perfect."},
+ {pl:"Telefon dzwonił, ale nie odebrałem.", en:"The phone ___, but I didn't answer.", opts:[T.PaS,T.PaC,T.PaPf], a:1, cat:T.PaC, why:"Dzwonienie trwało (tło) → Past Continuous: was ringing.", tip:"Czynność w toku jako tło → Past Continuous."},
+ {pl:"Do końca roku przepracuję tu 10 lat.", en:"By the end of the year I ___ here for 10 years.", opts:[T.FC,T.FPf,T.WILL], a:1, cat:T.FPf, why:"Bilans osiągnięty do danego momentu w przyszłości → Future Perfect: will have worked.", tip:"by the end + bilans → Future Perfect."},
+ {pl:"On gra w tenisa w każdą sobotę.", en:"He ___ tennis every Saturday.", opts:[T.PS,T.PC,T.PaS], a:0, cat:T.PS, why:"„Every Saturday” = rutyna → Present Simple: plays.", tip:"every Saturday → Present Simple."},
+ {pl:"Spójrz, dzieci budują zamek z piasku.", en:"Look, the kids ___ a sandcastle.", opts:[T.PS,T.PC,T.PaC], a:1, cat:T.PC, why:"„Look” + dzieje się teraz → Present Continuous: are building.", tip:"Look! → Present Continuous."},
+ {pl:"Nigdy wcześniej nie leciałem samolotem.", en:"I ___ by plane before.", opts:[T.PaS,T.PPf,T.PaPf], a:1, cat:T.PPf, why:"„Before” = kiedykolwiek dotąd + brak daty → Present Perfect: have never flown.", tip:"never … before → Present Perfect."},
+ {pl:"Leciałem samolotem po raz pierwszy w 2010.", en:"I ___ by plane for the first time in 2010.", opts:[T.PaS,T.PPf,T.PaPf], a:0, cat:T.PaS, why:"„In 2010” = konkretny rok → Past Simple: flew.", tip:"in 2010 → Past Simple."},
+ {pl:"Uczyła się godzinę, zanim zrobiła przerwę.", en:"She ___ for an hour before she took a break.", opts:[T.PaS,T.PaPC,T.PaC], a:1, cat:T.PaPC, why:"Proces trwający (godzinę) do momentu w przeszłości → Past Perfect Continuous: had been studying.", tip:"for an hour + „zanim” → Past Perfect Continuous."},
+ {pl:"Myślę, że ci się spodoba.", en:"I think you ___ it.", opts:[T.WILL,T.GO,T.PC], a:0, cat:T.WILL, why:"Przewidywanie-opinia (I think) → will: will like.", tip:"I think + przyszłość → will."},
+ {pl:"Zarezerwowaliśmy stół — jemy dziś w restauracji.", en:"We ___ at a restaurant tonight.", opts:[T.WILL,T.GO,T.PC], a:2, cat:T.PC, why:"Ustalony plan z rezerwacją → Present Continuous: we're eating.", tip:"Rezerwacja/ustalony plan → Present Continuous."},
+ {pl:"Ten plan się nie uda — widzę to.", en:"This plan ___ work, I can tell.", opts:[T.WILL,T.GO,T.PC], a:1, cat:T.GO, why:"Przewidywanie z dowodów → going to: isn't going to work.", tip:"Przewidywanie z dowodów → going to."},
+ {pl:"Gdzie mieszkałeś, zanim przyjechałeś do Polski?", en:"Where ___ you ___ before you came to Poland?", opts:[T.PaS,T.PaPf,T.PPf], a:1, cat:T.PaPf, why:"Mieszkanie było wcześniejsze niż przyjazd → Past Perfect: had you lived.", tip:"before + wcześniejszy okres → Past Perfect."},
+ {pl:"Właśnie wróciłem z wakacji.", en:"I ___ just ___ from holiday.", opts:[T.PaS,T.PPf,T.PaC], a:1, cat:T.PPf, why:"„Just” + świeży skutek → Present Perfect: have just come back.", tip:"just → Present Perfect."},
+ {pl:"W zeszłym roku pojechaliśmy do Hiszpanii.", en:"Last year we ___ to Spain.", opts:[T.PaS,T.PPf,T.PaC], a:0, cat:T.PaS, why:"„Last year” = zamknięty okres → Past Simple: went.", tip:"last year/week/month → Past Simple."},
+ {pl:"Czekam na ciebie od dwóch godzin!", en:"I ___ for you for two hours!", opts:[T.PPf,T.PPC,T.PaC], a:1, cat:T.PPC, why:"Trwanie do teraz + „jak długo” + emocje → Present Perfect Continuous: have been waiting.", tip:"for two hours + wciąż → Perfect Continuous."},
+ {pl:"Wypiłem już trzy kawy dzisiaj.", en:"I ___ three coffees today.", opts:[T.PaS,T.PPf,T.PPC], a:1, cat:T.PPf, why:"Liczba do teraz, „today” wciąż trwa → Present Perfect: have had/drunk.", tip:"ile sztuk + today → Present Perfect (wynik)."},
+ {pl:"Gdy zadzwonił budzik, już nie spałem.", en:"When the alarm rang, I ___ already ___.", opts:[T.PaS,T.PaPf,T.PaC], a:1, cat:T.PaPf, why:"Obudzenie było przed dzwonkiem → Past Perfect: had already woken up.", tip:"„już” przed zdarzeniem → Past Perfect."},
+ {pl:"Zadzwonię, jak tylko skończę.", en:"I'll call as soon as I ___.", opts:[T.WILL,T.PS,T.FPf], a:1, cat:T.PS, why:"Po „as soon as” o przyszłości → Present Simple: as soon as I finish.", tip:"as soon as + przyszłość → Present Simple."},
+ {pl:"On zawsze zapomina kluczy.", en:"He always ___ his keys.", opts:[T.PS,T.PC,T.PPf], a:0, cat:T.PS, why:"„Always” jako stały nawyk (fakt) → Present Simple: forgets.", tip:"always (fakt) → Present Simple."},
+ {pl:"Przepraszam za bałagan — remontujemy mieszkanie.", en:"Sorry for the mess — we ___ the flat.", opts:[T.PS,T.PC,T.PPf], a:1, cat:T.PC, why:"Proces tymczasowy w tym okresie → Present Continuous: are renovating.", tip:"Tymczasowy projekt → Present Continuous."},
+ {pl:"Czy skończyłeś studia?", en:"___ you ___ university?", opts:[T.PaS,T.PPf,T.PaPf], a:1, cat:T.PPf, why:"Pytanie o fakt życiowy bez daty, skutek teraz → Present Perfect: Have you finished.", tip:"Życiowy fakt bez daty → Present Perfect."},
+ {pl:"Skończyłem studia w 2018.", en:"I ___ university in 2018.", opts:[T.PaS,T.PPf,T.PaPf], a:0, cat:T.PaS, why:"„In 2018” → Past Simple: finished.", tip:"Rok → Past Simple."},
+ {pl:"Zemdlał, bo nic nie jadł przez cały dzień.", en:"He fainted because he ___ anything all day.", opts:[T.PaS,T.PaPf,T.PaPC], a:1, cat:T.PaPf, why:"Stan „nic nie jadł” do momentu zemdlenia → Past Perfect: hadn't eaten.", tip:"Przyczyna-stan przed przeszłym zdarzeniem → Past Perfect."},
+ {pl:"O tej porze jutro będę zdawał egzamin.", en:"This time tomorrow I ___ an exam.", opts:[T.WILL,T.FC,T.FPf], a:1, cat:T.FC, why:"Czynność w toku w danym momencie przyszłości → Future Continuous: will be taking.", tip:"this time tomorrow → Future Continuous."},
+ {pl:"On pracuje tutaj od trzech miesięcy.", en:"He ___ here for three months.", opts:[T.PS,T.PPf,T.PaS], a:1, cat:T.PPf, why:"Trwa do teraz + „for three months” → Present Perfect: has worked (lub Perf. Cont.).", tip:"for + wciąż trwa → Present Perfect."},
+ {pl:"Co robiłeś wczoraj o 15:00?", en:"What ___ you ___ at 3 pm yesterday?", opts:[T.PaS,T.PaC,T.PPf], a:1, cat:T.PaC, why:"Co było w toku o danej godzinie → Past Continuous: were you doing.", tip:"at 3 pm yesterday → Past Continuous."},
+ {pl:"Co robiłeś wczoraj? (ogólnie, wydarzenia)", en:"What ___ you ___ yesterday?", opts:[T.PaS,T.PaC,T.PPf], a:0, cat:T.PaS, why:"Pytanie o zakończone wydarzenia całego dnia → Past Simple: did you do.", tip:"„co robiłeś?” o faktach dnia → Past Simple."},
+ {pl:"Jeszcze nie zdecydowałem.", en:"I ___ decided yet.", opts:[T.PaS,T.PPf,T.PaPf], a:1, cat:T.PPf, why:"„Yet” w przeczeniu + stan teraz → Present Perfect: haven't decided.", tip:"not … yet → Present Perfect."},
+ {pl:"On gotował obiad, kiedy odcięli prąd.", en:"He ___ dinner when the power went out.", opts:[T.PaS,T.PaC,T.PaPf], a:1, cat:T.PaC, why:"Gotowanie trwało (tło), przerwane zdarzeniem → Past Continuous: was cooking.", tip:"Tło + nagłe przerwanie → Past Continuous."},
+ {pl:"Za rok otworzę własną firmę (plan).", en:"In a year I ___ my own company.", opts:[T.WILL,T.GO,T.FC], a:1, cat:T.GO, why:"Zamiar/plan na przyszłość → be going to: I'm going to open.", tip:"Plan na przyszłość → going to."},
+ {pl:"Daj mi chwilę, pomogę ci za sekundę.", en:"Give me a sec, I ___ you in a second.", opts:[T.WILL,T.GO,T.PC], a:0, cat:T.WILL, why:"Decyzja/obietnica na poczekaniu → will: I'll help.", tip:"W tej chwili ustalone → will."},
+ {pl:"Znają się od dzieciństwa.", en:"They ___ each other since childhood.", opts:[T.PS,T.PPf,T.PaS], a:1, cat:T.PPf, why:"„Since childhood” + wciąż się znają → Present Perfect: have known.", tip:"know + since → Present Perfect (choć po polsku „znają się”)."},
+ {pl:"Zwykle jeździmy nad morze, ale w tym roku jedziemy w góry.", en:"We usually go to the sea, but this year we ___ to the mountains.", opts:[T.PS,T.PC,T.GO], a:1, cat:T.PC, why:"Ustalony plan odbiegający od rutyny → Present Continuous: are going (going to też OK).", tip:"Konkretny ustalony plan → Present Continuous."},
+ {pl:"Zanim nauczyciel wszedł, uczniowie hałasowali od kilku minut.", en:"Before the teacher came in, the students ___ noise for a few minutes.", opts:[T.PaS,T.PaPC,T.PaPf], a:1, cat:T.PaPC, why:"Proces trwający (hałasowali) do momentu wejścia → Past Perfect Continuous: had been making.", tip:"for a few minutes + „zanim” → Past Perfect Continuous."},
+ {pl:"Ta kawiarnia otwiera się o 7 rano.", en:"This café ___ at 7 am.", opts:[T.PS,T.PC,T.WILL], a:0, cat:T.PS, why:"Stała godzina otwarcia (fakt/harmonogram) → Present Simple: opens.", tip:"Godziny otwarcia → Present Simple."}
+];
+
+/* ---------- Logika ----------*/
+const el = id => document.getElementById(id);
+const tabs = document.querySelectorAll('.tab');
+const views = {learn: el('learn'), cheat: el('cheat'), timeline: el('timeline'), quiz: el('quiz')};
+tabs.forEach(t=>t.addEventListener('click',()=>switchView(t.dataset.view)));
+function switchView(v){
+  tabs.forEach(t=>t.classList.toggle('active', t.dataset.view===v));
+  Object.entries(views).forEach(([k,node])=>node.classList.toggle('active', k===v));
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(v==='timeline' && typeof playTl==='function') playTl();
+}
+document.querySelectorAll('[data-goquiz]').forEach(b=>b.addEventListener('click',()=>switchView('quiz')));
+
+const cats = [...new Set(Q.map(q=>q.cat))];
+const filterBox = el('filters');
+let activeFilter = 'ALL';
+function renderFilters(){
+  filterBox.innerHTML='';
+  filterBox.appendChild(mkChip('Wszystkie ('+Q.length+')','ALL'));
+  cats.forEach(c=>{
+    const n = Q.filter(q=>q.cat===c).length;
+    filterBox.appendChild(mkChip(c+' ('+n+')', c));
+  });
+  updateChips();
+}
+function mkChip(label,val){
+  const b=document.createElement('button');
+  b.className='fchip'; b.textContent=label; b.dataset.val=val;
+  b.addEventListener('click',()=>{activeFilter=val;updateChips();});
+  return b;
+}
+function updateChips(){
+  filterBox.querySelectorAll('.fchip').forEach(c=>c.classList.toggle('on', c.dataset.val===activeFilter));
+}
+renderFilters();
+el('tabQuiz').textContent = '📝 Test — '+Q.length+' zdań';
+el('quizTitle').textContent = '📝 Test — '+Q.length+' zdań';
+
+let deck=[], idx=0, ok=0, bad=0, answered=false;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function startQuiz(){
+  deck = activeFilter==='ALL' ? Q.slice() : Q.filter(q=>q.cat===activeFilter);
+  deck = shuffle(deck.slice());
+  idx=0; ok=0; bad=0;
+  el('quizIntro').style.display='none';
+  el('quizResult').style.display='none';
+  el('quizRun').style.display='block';
+  el('scOk').textContent=0; el('scBad').textContent=0;
+  render();
+}
+el('startBtn').addEventListener('click',startQuiz);
+el('restartBtn').addEventListener('click',()=>{el('quizRun').style.display='none';el('quizIntro').style.display='block';window.scrollTo({top:0,behavior:'smooth'});});
+el('againBtn').addEventListener('click',startQuiz);
+el('reviewBtn').addEventListener('click',()=>switchView('learn'));
+
+function render(){
+  answered=false;
+  const q=deck[idx];
+  el('qnum').textContent=`Pytanie ${idx+1} / ${deck.length}`;
+  el('qcat').textContent=activeFilter==='ALL'?'🎲 mix':q.cat;
+  el('qpl').textContent='„'+q.pl+'”';
+  el('qen').innerHTML = q.en.replace('___','<span class="gap">___</span>');
+  el('bar').style.width = ((idx)/deck.length*100)+'%';
+  const optsBox=el('opts'); optsBox.innerHTML='';
+  const order = shuffle(q.opts.map((o,i)=>({o,i})));
+  order.forEach(({o,i})=>{
+    const btn=document.createElement('button');
+    btn.className='opt';
+    btn.innerHTML='<span>'+o+'</span>';
+    btn.addEventListener('click',()=>choose(i,btn));
+    optsBox.appendChild(btn);
+  });
+  el('explain').className='explain';
+  el('nextBtn').disabled=true;
+}
+
+function choose(i,btn){
+  if(answered) return;
+  answered=true;
+  const q=deck[idx];
+  const correct = i===q.a;
+  [...el('opts').children].forEach(b=>{
+    b.disabled=true;
+    if(b.textContent===q.opts[q.a]){b.classList.add('correct'); addMark(b,'✓');}
+  });
+  if(correct){ ok++; el('scOk').textContent=ok; }
+  else{ bad++; el('scBad').textContent=bad; btn.classList.add('wrong'); addMark(btn,'✗'); }
+  const ex=el('explain');
+  ex.className='explain show '+(correct?'good':'poor');
+  el('exHead').textContent = correct ? '✅ Dobrze!' : '❌ Poprawny: '+q.opts[q.a];
+  el('exWhy').innerHTML = (correct?'':'<b>Dlaczego '+q.opts[q.a]+'?</b> ') + q.why;
+  el('exTip').textContent = '💡 '+q.tip;
+  el('nextBtn').disabled=false;
+  el('bar').style.width = ((idx+1)/deck.length*100)+'%';
+}
+function addMark(btn,ch){const s=document.createElement('span');s.className='mark';s.textContent=ch;btn.appendChild(s);}
+
+el('nextBtn').addEventListener('click',()=>{
+  if(!answered) return;
+  if(idx<deck.length-1){idx++;render();window.scrollTo({top:0,behavior:'smooth'});}
+  else finish();
+});
+
+function finish(){
+  el('quizRun').style.display='none';
+  el('quizResult').style.display='block';
+  el('finalScore').textContent=ok;
+  el('finalTotal').textContent=deck.length;
+  const pct = Math.round(ok/deck.length*100);
+  el('ring').style.setProperty('--p', pct+'%');
+  let msg;
+  if(pct>=90) msg='🏆 Rewelacja! Czujesz czasy intuicyjnie.';
+  else if(pct>=70) msg='👏 Bardzo dobrze! Jeszcze kilka niuansów.';
+  else if(pct>=50) msg='🙂 Niezły start — wróć do „Nauki" i powtórz.';
+  else msg='💪 Spokojnie — przejrzyj „Naukę" i spróbuj ponownie.';
+  el('finalMsg').textContent = msg+` (${pct}%)`;
+}
+
+/* ---------- Oś czasu ---------- */
+// m: lista markerów. Typy: dot{pos,cls,label,up,delay} | bar{from,to,cls,mode,label,delay}
+//    flash{pos,label,delay} | link{from,to,delay} | travel{from,to,delay}
+const TL = {
+  "Present Simple": { en:"I <b>drink</b> coffee every morning.", pl:"Piję kawę co rano.",
+    note:"Rutyna — powtarza się regularnie przez całe życie, bez związku z jednym momentem.",
+    m:[{t:"dot",pos:12,cls:"present small",delay:0},{t:"dot",pos:27,cls:"present small",delay:.12},
+       {t:"dot",pos:42,cls:"present small",delay:.24},{t:"dot",pos:58,cls:"present small",delay:.36},
+       {t:"dot",pos:73,cls:"present small",delay:.48},{t:"dot",pos:88,cls:"present small",delay:.6},
+       {t:"lbl",pos:50,up:1,label:"powtarzalnie, zawsze",delay:.7}]},
+  "Present Continuous": { en:"I<b>'m drinking</b> coffee now.", pl:"Piję kawę teraz.",
+    note:"Dzieje się w tej chwili — pasek pulsuje dokładnie wokół TERAZ.",
+    m:[{t:"bar",from:42,to:60,cls:"present pulse",delay:0},{t:"lbl",pos:51,up:1,label:"w toku teraz",delay:.5}]},
+  "Present Perfect": { en:"I<b>'ve lost</b> my keys.", pl:"Zgubiłem klucze (i teraz ich nie mam).",
+    note:"Zdarzenie w przeszłości, ale ważny jest SKUTEK teraz — linia łączy je z TERAZ.",
+    m:[{t:"dot",pos:26,cls:"past",label:"zdarzenie",delay:0},{t:"link",from:26,to:50,delay:.3},
+       {t:"travel",from:26,to:50,delay:.4},{t:"dot",pos:50,cls:"present",label:"skutek teraz",up:1,delay:1.4}]},
+  "Present Perfect Continuous": { en:"I<b>'ve been waiting</b> for an hour.", pl:"Czekam już godzinę (i wciąż).",
+    note:"Czynność trwała od przeszłości aż do teraz — nacisk na „jak długo”.",
+    m:[{t:"bar",from:24,to:50,cls:"present stripes",delay:0},{t:"lbl",pos:37,up:1,label:"trwa aż do teraz",delay:.6},
+       {t:"dot",pos:50,cls:"present small",delay:.7}]},
+  "Past Simple": { en:"I <b>lost</b> my keys yesterday.", pl:"Zgubiłem klucze wczoraj.",
+    note:"Jeden zakończony moment w przeszłości — odcięty od teraz.",
+    m:[{t:"dot",pos:30,cls:"past",label:"jeden moment",delay:0}]},
+  "Past Continuous": { en:"I <b>was cooking</b> when he called.", pl:"Gotowałem, gdy zadzwonił.",
+    note:"Dłuższe tło w przeszłości (pasek) przerwane nagłym zdarzeniem (⚡).",
+    m:[{t:"bar",from:14,to:46,cls:"past",label:"trwało (tło)",delay:0},{t:"flash",pos:36,label:"przerwanie",delay:.7}]},
+  "Past Perfect": { en:"The train <b>had left</b> before we came.", pl:"Pociąg odjechał, zanim przyszliśmy.",
+    note:"Dwa zdarzenia w przeszłości — to WCZEŚNIEJSZE dostaje Past Perfect (had + III).",
+    m:[{t:"dot",pos:18,cls:"early",label:"1. wcześniej (had left)",delay:0},
+       {t:"dot",pos:42,cls:"past",label:"2. potem (we came)",up:1,delay:.6}]},
+  "Past Perfect Continuous": { en:"He <b>had been working</b> all day.", pl:"Pracował cały dzień (przed tym momentem).",
+    note:"Proces trwał aż do pewnego momentu w przeszłości — i był jego przyczyną.",
+    m:[{t:"bar",from:10,to:40,cls:"past stripes",label:"trwało...",delay:0},
+       {t:"dot",pos:40,cls:"past",label:"...do momentu w przeszłości",up:1,delay:.6}]},
+  "Future (will)": { en:"I<b>'ll help</b> you.", pl:"Pomogę ci (decyduję teraz).",
+    note:"Decyzja podjęta TERAZ, akcja wykona się w przyszłości.",
+    m:[{t:"flash",pos:50,label:"decyzja teraz",delay:0},{t:"link",from:50,to:72,delay:.4},
+       {t:"travel",from:50,to:72,delay:.5},{t:"dot",pos:72,cls:"future",label:"zrobię",up:1,delay:1.5}]},
+  "Future (going to)": { en:"I<b>'m going to</b> study medicine.", pl:"Będę studiował medycynę (plan).",
+    note:"Plan/zamiar istnieje już TERAZ i prowadzi do działania w przyszłości.",
+    m:[{t:"dot",pos:50,cls:"present small",label:"plan już teraz",delay:0},{t:"link",from:50,to:74,delay:.3},
+       {t:"dot",pos:74,cls:"future",label:"realizacja",up:1,delay:.9}]},
+  "Future Continuous": { en:"This time tomorrow I<b>'ll be flying</b>.", pl:"Jutro o tej porze będę leciał.",
+    note:"Czynność będzie TRWAĆ w konkretnym momencie przyszłości.",
+    m:[{t:"bar",from:64,to:84,cls:"future pulse",delay:0},{t:"lbl",pos:74,up:1,label:"będzie trwać",delay:.5}]},
+  "Future Perfect": { en:"By Friday I<b>'ll have finished</b>.", pl:"Do piątku skończę.",
+    note:"Czynność będzie ZAKOŃCZONA przed danym punktem w przyszłości (by Friday).",
+    m:[{t:"bar",from:56,to:76,cls:"future",label:"zdążę zrobić",delay:0},
+       {t:"flash",pos:80,label:"przed tym (by...)",delay:.7}]}
+};
+
+const tlOrder = ["Present Simple","Present Continuous","Present Perfect","Present Perfect Continuous",
+  "Past Simple","Past Continuous","Past Perfect","Past Perfect Continuous",
+  "Future (will)","Future (going to)","Future Continuous","Future Perfect"];
+let tlActive = tlOrder[0];
+
+function renderTlChips(){
+  const box = el('tlChips');
+  box.innerHTML='';
+  tlOrder.forEach(name=>{
+    const b=document.createElement('button');
+    b.className='fchip'+(name===tlActive?' on':'');
+    b.textContent=name;
+    b.addEventListener('click',()=>{tlActive=name;renderTlChips();playTl();});
+    box.appendChild(b);
+  });
+}
+function playTl(){
+  const cfg = TL[tlActive];
+  const stage = el('tlMarkers');
+  stage.innerHTML='';
+  cfg.m.forEach(mk=>{
+    let node;
+    if(mk.t==='dot'){
+      node=document.createElement('div');
+      node.className='tl-dot '+(mk.cls||'');
+      node.style.left=mk.pos+'%';
+      node.style.animationDelay=(mk.delay||0)+'s';
+      if(mk.label){const l=lbl(mk.pos,mk.label,mk.up,(mk.delay||0)+.25);stage.appendChild(l);}
+    }else if(mk.t==='bar'){
+      node=document.createElement('div');
+      node.className='tl-bar '+(mk.cls||'');
+      node.style.left=mk.from+'%';
+      node.style.width=(mk.to-mk.from)+'%';
+      node.style.animationDelay=(mk.delay||0)+'s';
+      if(mk.label){const mid=(mk.from+mk.to)/2;const l=lbl(mid,mk.label,mk.up,(mk.delay||0)+.3);stage.appendChild(l);}
+    }else if(mk.t==='flash'){
+      node=document.createElement('div');
+      node.className='tl-flash';node.textContent='⚡';
+      node.style.left=mk.pos+'%';node.style.animationDelay=(mk.delay||0)+'s';
+      if(mk.label){const l=lbl(mk.pos,mk.label,mk.up,(mk.delay||0)+.25);stage.appendChild(l);}
+    }else if(mk.t==='link'){
+      node=document.createElement('div');
+      node.className='tl-link';
+      node.style.left=mk.from+'%';node.style.width=(mk.to-mk.from)+'%';
+      node.style.animationDelay=(mk.delay||0)+'s';
+    }else if(mk.t==='travel'){
+      node=document.createElement('div');
+      node.className='tl-travel';
+      node.style.setProperty('--from',mk.from+'%');
+      node.style.setProperty('--to',mk.to+'%');
+      node.style.left=mk.from+'%';
+      node.style.animationDelay=(mk.delay||0)+'s';
+    }else if(mk.t==='lbl'){
+      node=lbl(mk.pos,mk.label,mk.up,(mk.delay||0));
+    }
+    if(node) stage.appendChild(node);
+  });
+  el('tlCap').innerHTML =
+    '<div class="en">'+cfg.en+'</div><div class="pl">'+cfg.pl+'</div><div class="note">💡 '+cfg.note+'</div>';
+}
+function lbl(pos,text,up,delay){
+  const l=document.createElement('div');
+  l.className='tl-lbl'+(up?' up':'');
+  l.style.left=pos+'%';l.textContent=text;l.style.animationDelay=(delay||0)+'s';
+  return l;
+}
+el('tlReplay').addEventListener('click',playTl);
+renderTlChips();
+playTl();
+</script>
+</body>
+</html>
